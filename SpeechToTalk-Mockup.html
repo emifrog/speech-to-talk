@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Speech To Talk - Mockup Interactif</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#2E5DA8',
+            secondary: '#4A7FC1',
+            accent: '#E63946',
+            light: '#EEF4FC',
+            dark: '#1A1A2E',
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+    .phone-frame {
+      width: 375px;
+      height: 812px;
+      border-radius: 40px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+      position: relative;
+    }
+    .notch {
+      width: 150px;
+      height: 30px;
+      background: #000;
+      border-radius: 0 0 20px 20px;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 50;
+    }
+    .screen { padding-top: 44px; height: 100%; }
+    .tab-active { color: #2E5DA8; border-bottom: 2px solid #2E5DA8; }
+    .tab-active-red { color: #E63946; border-bottom: 2px solid #E63946; }
+    .pulse-ring {
+      animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.8); opacity: 1; }
+      80%, 100% { transform: scale(2); opacity: 0; }
+    }
+    .recording-pulse {
+      animation: recording 1s ease-in-out infinite;
+    }
+    @keyframes recording {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    .fade-in { animation: fadeIn 0.3s ease-out; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .logo-text {
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen p-8">
+  
+  <!-- Header -->
+  <div class="text-center mb-8">
+    <div class="flex items-center justify-center gap-3 mb-2">
+      <img src="/mnt/user-data/uploads/logo.png" alt="Logo" class="w-12 h-12">
+      <h1 class="text-3xl logo-text">
+        <span class="text-dark">Speech</span>
+        <span class="text-dark">To</span>
+        <span class="text-accent">Talk</span>
+      </h1>
+    </div>
+    <p class="text-gray-600">Mockup Interactif - Cliquez sur les onglets pour naviguer</p>
+  </div>
+
+  <!-- Main container -->
+  <div class="flex flex-wrap justify-center gap-8">
+    
+    <!-- Phone 1: Home / Translate -->
+    <div class="flex flex-col items-center">
+      <h3 class="text-lg font-semibold text-gray-700 mb-4">Écran Principal</h3>
+      <div class="phone-frame bg-white">
+        <div class="notch"></div>
+        <div class="screen flex flex-col bg-gradient-to-b from-primary to-secondary">
+          
+          <!-- Status bar -->
+          <div class="flex justify-between items-center px-6 py-2 text-white text-xs">
+            <span>09:41</span>
+            <div class="flex gap-1">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm0 16c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7z"/></svg>
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17 4h-3V2h-4v2H7v18h10V4z"/></svg>
+            </div>
+          </div>
+
+          <!-- App header -->
+          <div class="px-6 pt-4 pb-6 text-white">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center p-1">
+                <svg viewBox="0 0 100 100" class="w-full h-full">
+                  <circle cx="55" cy="40" r="28" fill="#2E5DA8" stroke="#1A1A2E" stroke-width="3"/>
+                  <circle cx="55" cy="40" r="3" fill="#1A1A2E"/>
+                  <circle cx="55" cy="40" r="3" fill="#1A1A2E" transform="translate(-10, 0)"/>
+                  <circle cx="55" cy="40" r="3" fill="#1A1A2E" transform="translate(10, 0)"/>
+                  <circle cx="35" cy="60" r="18" fill="#E63946" stroke="#1A1A2E" stroke-width="3"/>
+                  <circle cx="35" cy="60" r="2" fill="#1A1A2E"/>
+                  <circle cx="35" cy="60" r="2" fill="#1A1A2E" transform="translate(-6, 0)"/>
+                  <circle cx="35" cy="60" r="2" fill="#1A1A2E" transform="translate(6, 0)"/>
+                </svg>
+              </div>
+              <div>
+                <h1 class="text-xl font-bold">Speech To <span class="text-red-200">Talk</span></h1>
+                <p class="text-white/80 text-sm">Traduction vocale médicale</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Main content -->
+          <div class="flex-1 bg-gray-50 rounded-t-3xl px-6 pt-6 pb-20 overflow-auto">
+            
+            <!-- Language selector -->
+            <div class="flex items-center justify-between mb-6">
+              <div class="flex-1 bg-white rounded-xl p-4 shadow-sm">
+                <p class="text-xs text-gray-500 mb-1">De</p>
+                <div class="flex items-center gap-2">
+                  <span class="text-2xl">🇬🇧</span>
+                  <span class="font-medium">English</span>
+                </div>
+              </div>
+              
+              <button class="mx-3 w-10 h-10 bg-primary rounded-full flex items-center justify-center shadow-lg">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+                </svg>
+              </button>
+              
+              <div class="flex-1 bg-white rounded-xl p-4 shadow-sm">
+                <p class="text-xs text-gray-500 mb-1">Vers</p>
+                <div class="flex items-center gap-2">
+                  <span class="text-2xl">🇮🇹</span>
+                  <span class="font-medium">Italiano</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Microphone button -->
+            <div class="flex flex-col items-center my-8">
+              <div class="relative">
+                <div class="absolute inset-0 bg-primary/20 rounded-full pulse-ring"></div>
+                <button class="relative w-24 h-24 bg-primary rounded-full flex items-center justify-center shadow-xl recording-pulse">
+                  <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1 1.93c-3.94-.49-7-3.85-7-7.93h2c0 3.31 2.69 6 6 6s6-2.69 6-6h2c0 4.08-3.06 7.44-7 7.93V21h-2v-5.07z"/>
+                  </svg>
+                </button>
+              </div>
+              <p class="text-gray-500 mt-4 text-sm">Appuyez pour parler</p>
+            </div>
+
+            <!-- Result card -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm fade-in">
+              <div class="mb-4">
+                <p class="text-xs text-gray-400 mb-1">Transcription</p>
+                <p class="text-gray-700">"I have chest pain"</p>
+              </div>
+              <div class="border-t pt-4">
+                <p class="text-xs text-gray-400 mb-1">Traduction</p>
+                <p class="text-lg font-medium text-primary">"Ho un dolore al petto"</p>
+              </div>
+              <button class="mt-4 w-full bg-accent/10 text-accent py-3 rounded-xl flex items-center justify-center gap-2 font-medium">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                </svg>
+                Écouter
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Bottom navigation -->
+          <div class="absolute bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 px-4">
+            <button class="flex flex-col items-center tab-active pb-1">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/></svg>
+              <span class="text-xs mt-1">Traduire</span>
+            </button>
+            <button class="flex flex-col items-center text-gray-400 pb-1">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z"/></svg>
+              <span class="text-xs mt-1">Conversation</span>
+            </button>
+            <button class="flex flex-col items-center text-gray-400 pb-1">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+              <span class="text-xs mt-1">Scanner</span>
+            </button>
+            <button class="flex flex-col items-center text-gray-400 pb-1">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>
+              <span class="text-xs mt-1">Urgence</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone 2: Emergency Phrases -->
+    <div class="flex flex-col items-center">
+      <h3 class="text-lg font-semibold text-gray-700 mb-4">Phrases d'Urgence</h3>
+      <div class="phone-frame bg-white">
+        <div class="notch"></div>
+        <div class="screen flex flex-col bg-gradient-to-b from-accent to-red-700">
+          
+          <!-- Status bar -->
+          <div class="flex justify-between items-center px-6 py-2 text-white text-xs">
+            <span>09:41</span>
+            <div class="flex gap-1">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9z"/></svg>
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17 4h-3V2h-4v2H7v18h10V4z"/></svg>
+            </div>
+          </div>
+
+          <!-- Header -->
+          <div class="px-6 pt-4 pb-6 text-white">
+            <h1 class="text-2xl font-bold">🚨 Urgence</h1>
+            <p class="text-white/80 text-sm">Phrases médicales essentielles</p>
+          </div>
+
+          <!-- Content -->
+          <div class="flex-1 bg-gray-50 rounded-t-3xl px-4 pt-6 pb-20 overflow-auto">
+            
+            <!-- Category tabs -->
+            <div class="flex gap-2 mb-4 overflow-x-auto pb-2">
+              <button class="px-4 py-2 bg-accent text-white rounded-full text-sm font-medium whitespace-nowrap">🩺 Douleur</button>
+              <button class="px-4 py-2 bg-white text-gray-600 rounded-full text-sm whitespace-nowrap">💊 Médicaments</button>
+              <button class="px-4 py-2 bg-white text-gray-600 rounded-full text-sm whitespace-nowrap">⚠️ Allergies</button>
+              <button class="px-4 py-2 bg-white text-gray-600 rounded-full text-sm whitespace-nowrap">🏥 Général</button>
+            </div>
+
+            <!-- Emergency phrases -->
+            <div class="space-y-3">
+              <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-accent">
+                <p class="font-medium text-gray-800">J'ai mal à la poitrine</p>
+                <p class="text-sm text-primary mt-1">Ho dolore al petto</p>
+                <div class="flex gap-2 mt-3">
+                  <button class="flex-1 bg-accent/10 text-accent py-2 rounded-lg text-sm font-medium flex items-center justify-center gap-1">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3z"/></svg>
+                    Écouter
+                  </button>
+                  <button class="w-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3z"/></svg>
+                  </button>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-accent">
+                <p class="font-medium text-gray-800">Je ne peux pas respirer</p>
+                <p class="text-sm text-primary mt-1">Non riesco a respirare</p>
+                <div class="flex gap-2 mt-3">
+                  <button class="flex-1 bg-accent/10 text-accent py-2 rounded-lg text-sm font-medium flex items-center justify-center gap-1">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3z"/></svg>
+                    Écouter
+                  </button>
+                  <button class="w-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3z"/></svg>
+                  </button>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-orange-500">
+                <p class="font-medium text-gray-800">J'ai des vertiges</p>
+                <p class="text-sm text-primary mt-1">Ho le vertigini</p>
+                <div class="flex gap-2 mt-3">
+                  <button class="flex-1 bg-orange-500/10 text-orange-600 py-2 rounded-lg text-sm font-medium flex items-center justify-center gap-1">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3z"/></svg>
+                    Écouter
+                  </button>
+                  <button class="w-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3z"/></svg>
+                  </button>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-orange-500">
+                <p class="font-medium text-gray-800">J'ai mal à la tête</p>
+                <p class="text-sm text-primary mt-1">Ho mal di testa</p>
+                <div class="flex gap-2 mt-3">
+                  <button class="flex-1 bg-orange-500/10 text-orange-600 py-2 rounded-lg text-sm font-medium flex items-center justify-center gap-1">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3z"/></svg>
+                    Écouter
+                  </button>
+                  <button class="w-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-accent" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Bottom navigation -->
+          <div class="absolute bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 px-4">
+            <button class="flex flex-col items-center text-gray-400 pb-1">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/></svg>
+              <span class="text-xs mt-1">Traduire</span>
+            </button>
+            <button class="flex flex-col items-center text-gray-400 pb-1">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z"/></svg>
+              <span class="text-xs mt-1">Conversation</span>
+            </button>
+            <button class="flex flex-col items-center text-gray-400 pb-1">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+              <span class="text-xs mt-1">Scanner</span>
+            </button>
+            <button class="flex flex-col items-center tab-active-red pb-1">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>
+              <span class="text-xs mt-1">Urgence</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone 3: Conversation Mode -->
+    <div class="flex flex-col items-center">
+      <h3 class="text-lg font-semibold text-gray-700 mb-4">Mode Conversation</h3>
+      <div class="phone-frame bg-white">
+        <div class="notch"></div>
+        <div class="screen flex flex-col bg-gradient-to-b from-primary to-secondary">
+          
+          <!-- Status bar -->
+          <div class="flex justify-between items-center px-6 py-2 text-white text-xs">
+            <span>09:41</span>
+            <div class="flex gap-1">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9z"/></svg>
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17 4h-3V2h-4v2H7v18h10V4z"/></svg>
+            </div>
+          </div>
+
+          <!-- Header -->
+          <div class="px-6 pt-4 pb-6 text-white flex items-center justify-between">
+            <div>
+              <h1 class="text-2xl font-bold">💬 Conversation</h1>
+              <p class="text-white/80 text-sm">Mode bilingue</p>
+            </div>
+            <button class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+            </button>
+          </div>
+
+          <!-- Content -->
+          <div class="flex-1 bg-gray-50 rounded-t-3xl flex flex-col">
+            
+            <!-- Conversation area -->
+            <div class="flex-1 px-4 pt-6 pb-4 overflow-auto space-y-4">
+              
+              <!-- Message from Person A -->
+              <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold text-sm">A</div>
+                <div class="flex-1">
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="text-xs font-medium text-gray-600">Personne A</span>
+                    <span class="text-2xl">🇬🇧</span>
+                  </div>
+                  <div class="bg-white rounded-2xl rounded-tl-none p-4 shadow-sm">
+                    <p class="text-gray-800">"Where does it hurt?"</p>
+                    <p class="text-primary text-sm mt-2 pt-2 border-t">Dove fa male?</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Message from Person B -->
+              <div class="flex items-start gap-3 flex-row-reverse">
+                <div class="w-10 h-10 rounded-full bg-accent flex items-center justify-center text-white font-bold text-sm">B</div>
+                <div class="flex-1">
+                  <div class="flex items-center gap-2 mb-1 justify-end">
+                    <span class="text-2xl">🇮🇹</span>
+                    <span class="text-xs font-medium text-gray-600">Personne B</span>
+                  </div>
+                  <div class="bg-accent/10 rounded-2xl rounded-tr-none p-4">
+                    <p class="text-gray-800">"Ho dolore al petto"</p>
+                    <p class="text-primary text-sm mt-2 pt-2 border-t border-accent/20">I have chest pain</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Message from Person A -->
+              <div class="flex items-start gap-3">
+                <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold text-sm">A</div>
+                <div class="flex-1">
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="text-xs font-medium text-gray-600">Personne A</span>
+                    <span class="text-2xl">🇬🇧</span>
+                  </div>
+                  <div class="bg-white rounded-2xl rounded-tl-none p-4 shadow-sm">
+                    <p class="text-gray-800">"Since when?"</p>
+                    <p class="text-primary text-sm mt-2 pt-2 border-t">Da quando?</p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Recording indicator -->
+            <div class="px-4 pb-4">
+              <div class="bg-white rounded-2xl p-4 shadow-lg border-2 border-accent">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 bg-accent rounded-full flex items-center justify-center recording-pulse">
+                    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                    </svg>
+                  </div>
+                  <div class="flex-1">
+                    <p class="text-sm font-medium text-gray-800">Personne B parle...</p>
+                    <div class="flex gap-1 mt-1">
+                      <div class="w-1 h-3 bg-accent rounded-full animate-pulse"></div>
+                      <div class="w-1 h-4 bg-accent rounded-full animate-pulse" style="animation-delay: 0.1s;"></div>
+                      <div class="w-1 h-2 bg-accent rounded-full animate-pulse" style="animation-delay: 0.2s;"></div>
+                      <div class="w-1 h-5 bg-accent rounded-full animate-pulse" style="animation-delay: 0.3s;"></div>
+                      <div class="w-1 h-3 bg-accent rounded-full animate-pulse" style="animation-delay: 0.4s;"></div>
+                    </div>
+                  </div>
+                  <span class="text-2xl">🇮🇹</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Bottom navigation -->
+          <div class="absolute bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 px-4">
+            <button class="flex flex-col items-center text-gray-400 pb-1">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/></svg>
+              <span class="text-xs mt-1">Traduire</span>
+            </button>
+            <button class="flex flex-col items-center tab-active pb-1">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z"/></svg>
+              <span class="text-xs mt-1">Conversation</span>
+            </button>
+            <button class="flex flex-col items-center text-gray-400 pb-1">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+              <span class="text-xs mt-1">Scanner</span>
+            </button>
+            <button class="flex flex-col items-center text-gray-400 pb-1">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>
+              <span class="text-xs mt-1">Urgence</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone 4: OCR Scanner -->
+    <div class="flex flex-col items-center">
+      <h3 class="text-lg font-semibold text-gray-700 mb-4">Scanner OCR</h3>
+      <div class="phone-frame bg-white">
+        <div class="notch"></div>
+        <div class="screen flex flex-col bg-gradient-to-b from-primary to-secondary">
+          
+          <!-- Status bar -->
+          <div class="flex justify-between items-center px-6 py-2 text-white text-xs">
+            <span>09:41</span>
+            <div class="flex gap-1">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9z"/></svg>
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17 4h-3V2h-4v2H7v18h10V4z"/></svg>
+            </div>
+          </div>
+
+          <!-- Header -->
+          <div class="px-6 pt-4 pb-6 text-white">
+            <h1 class="text-2xl font-bold">📷 Scanner</h1>
+            <p class="text-white/80 text-sm">Traduire documents et images</p>
+          </div>
+
+          <!-- Content -->
+          <div class="flex-1 bg-gray-50 rounded-t-3xl px-4 pt-6 pb-20 overflow-auto">
+            
+            <!-- Upload area -->
+            <div class="border-2 border-dashed border-gray-300 rounded-2xl p-8 text-center mb-6 bg-white">
+              <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+              </div>
+              <p class="text-gray-600 font-medium mb-2">Prenez une photo ou importez</p>
+              <p class="text-gray-400 text-sm">Ordonnances, notices, documents médicaux</p>
+              <div class="flex gap-3 mt-4 justify-center">
+                <button class="px-4 py-2 bg-primary text-white rounded-xl text-sm font-medium">📷 Caméra</button>
+                <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-xl text-sm font-medium">📁 Galerie</button>
+              </div>
+            </div>
+
+            <!-- Scanned result -->
+            <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+              <div class="bg-gray-200 h-32 flex items-center justify-center">
+                <div class="text-center">
+                  <p class="text-gray-500 text-sm">📄 Document scanné</p>
+                  <p class="text-xs text-gray-400">ordonnance_medicale.jpg</p>
+                </div>
+              </div>
+              <div class="p-4">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-xs font-medium text-gray-500">TEXTE EXTRAIT</span>
+                  <div class="flex items-center gap-1">
+                    <span class="text-lg">🇮🇹</span>
+                    <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                    <span class="text-lg">🇬🇧</span>
+                  </div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-3 mb-3">
+                  <p class="text-sm text-gray-600">Assumere una compressa due volte al giorno dopo i pasti.</p>
+                </div>
+                <div class="bg-primary/5 rounded-xl p-3 border border-primary/20">
+                  <p class="text-sm text-primary font-medium">Take one tablet twice a day after meals.</p>
+                </div>
+                <button class="mt-4 w-full bg-accent/10 text-accent py-3 rounded-xl flex items-center justify-center gap-2 font-medium text-sm">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+                  </svg>
+                  Écouter la traduction
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Bottom navigation -->
+          <div class="absolute bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 px-4">
+            <button class="flex flex-col items-center text-gray-400 pb-1">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/></svg>
+              <span class="text-xs mt-1">Traduire</span>
+            </button>
+            <button class="flex flex-col items-center text-gray-400 pb-1">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z"/></svg>
+              <span class="text-xs mt-1">Conversation</span>
+            </button>
+            <button class="flex flex-col items-center tab-active pb-1">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+              <span class="text-xs mt-1">Scanner</span>
+            </button>
+            <button class="flex flex-col items-center text-gray-400 pb-1">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>
+              <span class="text-xs mt-1">Urgence</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Feature summary -->
+  <div class="max-w-4xl mx-auto mt-12 bg-white rounded-2xl p-8 shadow-lg">
+    <h2 class="text-2xl font-bold text-primary mb-6 text-center">Récapitulatif des écrans</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div class="text-center">
+        <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-3">
+          <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/></svg>
+        </div>
+        <h3 class="font-semibold text-gray-800">Traduction vocale</h3>
+        <p class="text-sm text-gray-500 mt-1">Parlez et traduisez instantanément</p>
+      </div>
+      <div class="text-center">
+        <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-3">
+          <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1z"/></svg>
+        </div>
+        <h3 class="font-semibold text-gray-800">Conversation</h3>
+        <p class="text-sm text-gray-500 mt-1">Dialogue bilingue en temps réel</p>
+      </div>
+      <div class="text-center">
+        <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-3">
+          <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+        </div>
+        <h3 class="font-semibold text-gray-800">Scanner OCR</h3>
+        <p class="text-sm text-gray-500 mt-1">Traduisez vos documents</p>
+      </div>
+      <div class="text-center">
+        <div class="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center mx-auto mb-3">
+          <svg class="w-6 h-6 text-accent" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>
+        </div>
+        <h3 class="font-semibold text-gray-800">Urgences</h3>
+        <p class="text-sm text-gray-500 mt-1">Phrases médicales prédéfinies</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tech stack summary -->
+  <div class="max-w-4xl mx-auto mt-8 mb-12">
+    <div class="bg-gradient-to-r from-primary to-secondary rounded-2xl p-8 text-white">
+      <h2 class="text-xl font-bold mb-4 text-center">Stack Technique</h2>
+      <div class="flex flex-wrap justify-center gap-4">
+        <span class="px-4 py-2 bg-white/20 rounded-full text-sm">Next.js 14+</span>
+        <span class="px-4 py-2 bg-white/20 rounded-full text-sm">TypeScript</span>
+        <span class="px-4 py-2 bg-white/20 rounded-full text-sm">TailwindCSS</span>
+        <span class="px-4 py-2 bg-white/20 rounded-full text-sm">Supabase</span>
+        <span class="px-4 py-2 bg-white/20 rounded-full text-sm">Google Cloud APIs</span>
+        <span class="px-4 py-2 bg-white/20 rounded-full text-sm">Capacitor</span>
+        <span class="px-4 py-2 bg-white/20 rounded-full text-sm">PWA</span>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
