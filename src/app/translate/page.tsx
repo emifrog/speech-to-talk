@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { BottomNavigation, LanguageSelector, MicrophoneButton, TranslationResult, UserMenu, ThemeToggle } from '@/components/features';
+import { BottomNavigation, LanguageSelector, MicrophoneButton, TranslationResult, SettingsMenu } from '@/components/features';
 import { useTranslationFlow } from '@/hooks';
 
 export default function TranslatePage() {
@@ -49,8 +49,7 @@ export default function TranslatePage() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <ThemeToggle />
-            {/*<UserMenu />*/}
+            <SettingsMenu />
           </div>
         </div>
       </div>
@@ -109,7 +108,7 @@ export default function TranslatePage() {
               duration={duration}
               onPress={startRecording}
               onRelease={stopAndTranslate}
-              disabled={hasPermission === false}
+              disabled={false}
             />
           </div>
 

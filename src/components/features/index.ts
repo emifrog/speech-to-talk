@@ -4,4 +4,4 @@ export { TranslationResult } from './TranslationResult';
 export { EmergencyPhraseCard } from './EmergencyPhraseCard';
 export { BottomNavigation } from './BottomNavigation';
 export { UserMenu } from './UserMenu';
-export { ThemeToggle } from './ThemeToggle';
+export { ThemeToggle, SettingsMenu } from './ThemeToggle';

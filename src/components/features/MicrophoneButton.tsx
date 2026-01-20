@@ -31,18 +31,30 @@ export function MicrophoneButton({
   const isPlaying = audioState === 'playing';
   const isError = audioState === 'error';
 
-  const handlePress = () => {
+  const handlePress = (e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault(); // Empêcher le comportement par défaut
     if (!disabled && audioState === 'idle') {
       startRecordingHaptic();
       onPress();
     }
   };
 
-  const handleRelease = () => {
+  const handleRelease = (e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault(); // Empêcher le comportement par défaut
     if (isRecording) {
       stopRecordingHaptic();
       onRelease();
     }
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    e.preventDefault(); // Crucial pour éviter le délai de 300ms sur mobile
+    handlePress(e);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    e.preventDefault();
+    handleRelease(e);
   };
 
   // Haptic on error state
@@ -106,8 +118,8 @@ export function MicrophoneButton({
             onMouseDown={handlePress}
             onMouseUp={handleRelease}
             onMouseLeave={handleRelease}
-            onTouchStart={handlePress}
-            onTouchEnd={handleRelease}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
             disabled={disabled || isProcessing || isPlaying}
             className={cn(
               'relative rounded-full flex items-center justify-center transition-all duration-300 touch-manipulation',
