@@ -197,7 +197,14 @@ export function LanguageSelector() {
         aria-label={isSource ? 'Sélectionner la langue source' : 'Sélectionner la langue cible'}
         aria-activedescendant={focusedIndex >= 0 ? `lang-option-${isSource ? 'source' : 'target'}-${focusedIndex}` : undefined}
         tabIndex={-1}
-        className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-dark-light rounded-xl shadow-medium z-50 overflow-hidden border border-gray-100 dark:border-gray-700 animate-fade-in"
+        className={cn(
+          'absolute top-full left-0 right-0 mt-2 z-50 overflow-hidden animate-fade-in',
+          'rounded-2xl',
+          'bg-white/80 dark:bg-dark-light/80',
+          'backdrop-blur-xl',
+          'border border-white/50 dark:border-white/10',
+          'shadow-[0_8px_32px_rgba(0,0,0,0.12)]'
+        )}
         onKeyDown={(e) => handleKeyDown(e, isSource)}
       >
         {languages.map((lang, index) => (
@@ -209,21 +216,21 @@ export function LanguageSelector() {
             onClick={() => onSelect(lang.code)}
             onMouseEnter={() => setFocusedIndex(index)}
             className={cn(
-              'w-full px-4 py-3 flex items-center gap-3 transition-colors text-left',
+              'w-full px-4 py-3.5 flex items-center gap-3 transition-all duration-200 text-left',
               'focus:outline-none focus-visible:outline-none',
-              focusedIndex === index && 'bg-primary-50 dark:bg-primary-900/20',
-              lang.code === selectedCode && 'bg-primary-50 dark:bg-primary-900/30'
+              focusedIndex === index && 'bg-primary/10 dark:bg-primary/20',
+              lang.code === selectedCode && 'bg-primary/10 dark:bg-primary/20'
             )}
           >
             <span className="text-xl" aria-hidden="true">{lang.flag}</span>
             <span className={cn(
               'font-medium',
-              lang.code === selectedCode ? 'text-primary' : 'text-gray-700 dark:text-gray-200'
+              lang.code === selectedCode ? 'text-primary dark:text-primary-400' : 'text-slate-700 dark:text-slate-200'
             )}>
               {lang.nativeName}
             </span>
             {lang.code === selectedCode && (
-              <span className="ml-auto text-primary" aria-hidden="true">✓</span>
+              <span className="ml-auto text-primary dark:text-primary-400" aria-hidden="true">✓</span>
             )}
           </button>
         ))}
@@ -247,23 +254,27 @@ export function LanguageSelector() {
           aria-expanded={isSourceOpen}
           aria-label={`Langue source: ${sourceLanguage?.nativeName}`}
           className={cn(
-            'w-full bg-white dark:bg-dark-light rounded-xl p-4 shadow-soft text-left transition-all',
-            'hover:shadow-medium focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2',
+            'w-full rounded-2xl p-4 text-left transition-all duration-300',
+            'bg-white/60 dark:bg-dark-light/60',
+            'backdrop-blur-xl',
+            'border border-white/50 dark:border-white/10',
+            'shadow-glass hover:shadow-glass-lg',
+            'focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2',
             'dark:focus:ring-offset-dark',
-            isSourceOpen && 'ring-2 ring-primary'
+            isSourceOpen && 'ring-2 ring-primary-400'
           )}
         >
-          <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">De</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mb-1 font-medium">De</p>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="text-2xl" aria-hidden="true">{sourceLanguage?.flag}</span>
-              <span className="font-medium text-gray-800 dark:text-white">
+              <span className="font-semibold text-slate-800 dark:text-white">
                 {sourceLanguage?.nativeName}
               </span>
             </div>
             <ChevronDown
               className={cn(
-                'w-5 h-5 text-gray-400 transition-transform',
+                'w-5 h-5 text-slate-400 transition-transform duration-300',
                 isSourceOpen && 'rotate-180'
               )}
               aria-hidden="true"
@@ -285,9 +296,13 @@ export function LanguageSelector() {
       <button
         onClick={handleSwap}
         className={cn(
-          'w-10 h-10 bg-primary rounded-full flex items-center justify-center shadow-lg',
-          'hover:bg-primary-600 transition-colors',
-          'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2',
+          'w-12 h-12 rounded-2xl flex items-center justify-center',
+          'bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700',
+          'shadow-[0_4px_20px_rgba(37,99,235,0.4)]',
+          'hover:shadow-[0_6px_30px_rgba(37,99,235,0.5)]',
+          'hover:-translate-y-0.5',
+          'transition-all duration-300',
+          'focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2',
           'dark:focus:ring-offset-dark',
           'active:scale-95'
         )}
@@ -310,23 +325,27 @@ export function LanguageSelector() {
           aria-expanded={isTargetOpen}
           aria-label={`Langue cible: ${targetLanguage?.nativeName}`}
           className={cn(
-            'w-full bg-white dark:bg-dark-light rounded-xl p-4 shadow-soft text-left transition-all',
-            'hover:shadow-medium focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2',
+            'w-full rounded-2xl p-4 text-left transition-all duration-300',
+            'bg-white/60 dark:bg-dark-light/60',
+            'backdrop-blur-xl',
+            'border border-white/50 dark:border-white/10',
+            'shadow-glass hover:shadow-glass-lg',
+            'focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2',
             'dark:focus:ring-offset-dark',
-            isTargetOpen && 'ring-2 ring-primary'
+            isTargetOpen && 'ring-2 ring-primary-400'
           )}
         >
-          <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Vers</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mb-1 font-medium">Vers</p>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="text-2xl" aria-hidden="true">{targetLanguage?.flag}</span>
-              <span className="font-medium text-gray-800 dark:text-white">
+              <span className="font-semibold text-slate-800 dark:text-white">
                 {targetLanguage?.nativeName}
               </span>
             </div>
             <ChevronDown
               className={cn(
-                'w-5 h-5 text-gray-400 transition-transform',
+                'w-5 h-5 text-slate-400 transition-transform duration-300',
                 isTargetOpen && 'rotate-180'
               )}
               aria-hidden="true"

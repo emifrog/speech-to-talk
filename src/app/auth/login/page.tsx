@@ -44,9 +44,8 @@ export default function LoginPage() {
           </div>
           <div>
             <h1 className="text-2xl font-bold text-white">
-              Speech To <span className="text-red-200">Talk</span>
+              Speech To Talk
             </h1>
-            <p className="text-white/80 text-sm">Connexion</p>
           </div>
         </div>
       </div>

@@ -20,7 +20,7 @@ export function UserMenu() {
     );
   }
 
-  if (!isAuthenticated) {
+  /*if (!isAuthenticated) {
     return (
       <Link
         href="/auth/login"
@@ -30,7 +30,7 @@ export function UserMenu() {
         Connexion
       </Link>
     );
-  }
+  }*/
 
   const handleLogout = async () => {
     setIsOpen(false);

@@ -2,7 +2,7 @@ import { type HTMLAttributes, forwardRef } from 'react';
 import { cn } from '@/lib/utils';
 
 // ===========================================
-// Card Components
+// Card Components - Glassmorphism Design
 // ===========================================
 
 const Card = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
@@ -10,7 +10,7 @@ const Card = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
     <div
       ref={ref}
       className={cn(
-        'rounded-2xl bg-white shadow-soft',
+        'glass-card',
         className
       )}
       {...props}
@@ -18,6 +18,20 @@ const Card = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   )
 );
 Card.displayName = 'Card';
+
+const CardGradient = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn(
+        'glass-card-gradient',
+        className
+      )}
+      {...props}
+    />
+  )
+);
+CardGradient.displayName = 'CardGradient';
 
 const CardHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
@@ -34,7 +48,7 @@ const CardTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadingEleme
   ({ className, ...props }, ref) => (
     <h3
       ref={ref}
-      className={cn('text-lg font-semibold text-gray-900', className)}
+      className={cn('text-lg font-semibold text-slate-900 dark:text-white', className)}
       {...props}
     />
   )
@@ -45,7 +59,7 @@ const CardDescription = forwardRef<HTMLParagraphElement, HTMLAttributes<HTMLPara
   ({ className, ...props }, ref) => (
     <p
       ref={ref}
-      className={cn('text-sm text-gray-500', className)}
+      className={cn('text-sm text-slate-500 dark:text-slate-400', className)}
       {...props}
     />
   )
@@ -70,4 +84,4 @@ const CardFooter = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
 );
 CardFooter.displayName = 'CardFooter';
 
-export { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter };
+export { Card, CardGradient, CardHeader, CardTitle, CardDescription, CardContent, CardFooter };
