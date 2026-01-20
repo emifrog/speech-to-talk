@@ -5,18 +5,18 @@ import { Language, LanguageCode, EmergencyCategory } from '@/types';
 // ===========================================
 export const SUPPORTED_LANGUAGES: Language[] = [
   {
-    code: 'en',
-    name: 'English',
-    nativeName: 'English',
-    flag: '🇬🇧',
-    googleCode: 'en-US',
-  },
-  {
     code: 'fr',
     name: 'French',
     nativeName: 'Français',
     flag: '🇫🇷',
     googleCode: 'fr-FR',
+  },
+  {
+    code: 'en',
+    name: 'English',
+    nativeName: 'English',
+    flag: '🇬🇧',
+    googleCode: 'en-US',
   },
   {
     code: 'de',
@@ -336,6 +336,6 @@ export const AUDIO_CONFIG = {
 export const APP_CONFIG = {
   name: 'Speech To Talk',
   version: '1.0.0',
-  defaultSourceLang: 'en' as LanguageCode,
-  defaultTargetLang: 'it' as LanguageCode,
+  defaultSourceLang: 'fr' as LanguageCode,
+  defaultTargetLang: 'en' as LanguageCode,
 };

@@ -65,13 +65,50 @@ export function useAudioRecorder(
   // Demander la permission du micro
   const requestPermission = useCallback(async (): Promise<boolean> => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      // Vérifier si l'API est disponible
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        setError('Votre navigateur ne supporte pas l\'accès au microphone');
+        setHasPermission(false);
+        return false;
+      }
+
+      // Demander l'accès
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+        }
+      });
+
+      // Arrêter immédiatement le stream (on veut juste la permission)
       stream.getTracks().forEach((track) => track.stop());
+
       setHasPermission(true);
+      setError(null);
       return true;
-    } catch {
+    } catch (err) {
+      console.error('Permission error:', err);
+
+      // Messages d'erreur plus spécifiques
+      if (err instanceof Error) {
+        if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+          setError('Accès au microphone refusé. Veuillez autoriser dans les paramètres du navigateur.');
+        } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+          setError('Aucun microphone détecté sur cet appareil.');
+        } else if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
+          setError('Le microphone est utilisé par une autre application.');
+        } else if (err.name === 'OverconstrainedError') {
+          setError('Impossible de configurer le microphone.');
+        } else if (err.name === 'SecurityError') {
+          setError('Accès au microphone bloqué. Utilisez HTTPS.');
+        } else {
+          setError('Impossible d\'accéder au microphone.');
+        }
+      } else {
+        setError('Erreur inconnue lors de l\'accès au microphone.');
+      }
+
       setHasPermission(false);
-      setError('Permission micro refusée');
       return false;
     }
   }, []);

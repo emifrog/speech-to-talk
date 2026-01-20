@@ -1,9 +1,12 @@
 'use client';
 
-import { BottomNavigation, LanguageSelector, MicrophoneButton, TranslationResult, UserMenu } from '@/components/features';
+import { useState } from 'react';
+import { BottomNavigation, LanguageSelector, MicrophoneButton, TranslationResult, UserMenu, ThemeToggle } from '@/components/features';
 import { useTranslationFlow } from '@/hooks';
 
 export default function TranslatePage() {
+  const [isRequestingPermission, setIsRequestingPermission] = useState(false);
+
   const {
     audioState,
     duration,
@@ -16,6 +19,15 @@ export default function TranslatePage() {
     hasPermission,
     requestPermission,
   } = useTranslationFlow();
+
+  const handleRequestPermission = async () => {
+    setIsRequestingPermission(true);
+    try {
+      await requestPermission();
+    } finally {
+      setIsRequestingPermission(false);
+    }
+  };
 
   return (
     <div className="page-container">
@@ -36,7 +48,10 @@ export default function TranslatePage() {
               <p className="text-white/80 text-sm font-medium">Traduction vocale intelligente</p>
             </div>
           </div>
-          <UserMenu />
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            {/*<UserMenu />*/}
+          </div>
         </div>
       </div>
 
@@ -48,25 +63,41 @@ export default function TranslatePage() {
             <LanguageSelector />
           </div>
 
-          {/* Permission request */}
-          {hasPermission === false && (
+          {/* Permission request - affiché si permission refusée OU jamais demandée */}
+          {hasPermission !== true && (
             <div className="mt-4 mb-8 glass-card-gradient p-6 text-center animate-slide-up">
               <div className="w-16 h-16 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-[0_4px_20px_rgba(251,191,36,0.4)]">
                 <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
                 </svg>
               </div>
               <p className="text-slate-800 dark:text-white mb-2 font-semibold text-lg">
-                Accès au microphone requis
+                {hasPermission === false ? 'Microphone non autorisé' : 'Accès au microphone requis'}
               </p>
               <p className="text-slate-600 dark:text-slate-300 mb-5 text-sm">
-                Pour utiliser la traduction vocale, autorisez l&apos;accès au microphone.
+                {hasPermission === false
+                  ? 'Veuillez autoriser l\'accès au microphone dans les paramètres de votre navigateur, puis réessayez.'
+                  : 'Pour utiliser la traduction vocale, autorisez l\'accès au microphone.'
+                }
               </p>
               <button
-                onClick={requestPermission}
-                className="w-full px-6 py-4 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-2xl font-semibold shadow-[0_4px_20px_rgba(251,191,36,0.4)] hover:shadow-[0_6px_30px_rgba(251,191,36,0.5)] transition-all duration-300 active:scale-95 touch-manipulation hover:-translate-y-0.5"
+                onClick={handleRequestPermission}
+                disabled={isRequestingPermission}
+                className="w-full px-6 py-4 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-2xl font-semibold shadow-[0_4px_20px_rgba(251,191,36,0.4)] hover:shadow-[0_6px_30px_rgba(251,191,36,0.5)] transition-all duration-300 active:scale-95 touch-manipulation hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                Autoriser le microphone
+                {isRequestingPermission ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    Demande en cours...
+                  </span>
+                ) : hasPermission === false ? (
+                  'Réessayer'
+                ) : (
+                  'Autoriser le microphone'
+                )}
               </button>
             </div>
           )}
