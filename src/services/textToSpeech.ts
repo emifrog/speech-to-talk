@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/client';
 import type { LanguageCode, TextToSpeechResult, APIResponse } from '@/types';
 import { base64ToBlob } from '@/lib/utils';
 import { getLanguageByCode } from '@/lib/constants';
+import { retry, defaultIsRetryable } from '@/lib/retry';
 
 // ===========================================
 // Service Text-to-Speech
@@ -28,14 +29,36 @@ export async function textToSpeech(
       throw new Error('Langue non supportée');
     }
 
-    const { data, error } = await supabase.functions.invoke('text-to-speech', {
-      body: {
-        text: params.text,
-        languageCode: language.googleCode,
-        speakingRate: params.speakingRate ?? 1.0,
-        pitch: params.pitch ?? 0.0,
+    const { data, error } = await retry(
+      async () => {
+        const result = await supabase.functions.invoke('text-to-speech', {
+          body: {
+            text: params.text,
+            languageCode: language.googleCode,
+            speakingRate: params.speakingRate ?? 1.0,
+            pitch: params.pitch ?? 0.0,
+          },
+        });
+
+        if (result.error) {
+          const err = new Error(result.error.message);
+          if ('status' in result.error) {
+            (err as Error & { status?: number }).status = (result.error as { status?: number }).status;
+          }
+          throw err;
+        }
+
+        return result;
       },
-    });
+      {
+        maxRetries: 3,
+        initialDelay: 1000,
+        isRetryable: defaultIsRetryable,
+        onRetry: (attempt, err, delay) => {
+          console.warn(`Text-to-speech retry attempt ${attempt} after ${delay}ms:`, err);
+        },
+      }
+    );
 
     if (error) {
       throw new Error(error.message);

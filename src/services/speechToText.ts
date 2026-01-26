@@ -1,13 +1,14 @@
 import { createClient } from '@/lib/supabase/client';
 import type { LanguageCode, APIResponse } from '@/types';
-import { 
+import {
   SpeechToTextRequestSchema,
   SpeechToTextResponseSchema,
   DetectLanguageRequestSchema,
   DetectLanguageResponseSchema,
   AudioBlobSchema,
-  safeValidateData 
+  safeValidateData
 } from '@/lib/validation';
+import { retry, defaultIsRetryable } from '@/lib/retry';
 
 // ===========================================
 // Service de reconnaissance vocale
@@ -84,9 +85,31 @@ export async function speechToText(
       };
     }
 
-    const { data, error } = await supabase.functions.invoke('speech-to-text', {
-      body: requestValidation.data,
-    });
+    const { data, error } = await retry(
+      async () => {
+        const result = await supabase.functions.invoke('speech-to-text', {
+          body: requestValidation.data,
+        });
+
+        if (result.error) {
+          const err = new Error(result.error.message);
+          if ('status' in result.error) {
+            (err as Error & { status?: number }).status = (result.error as { status?: number }).status;
+          }
+          throw err;
+        }
+
+        return result;
+      },
+      {
+        maxRetries: 3,
+        initialDelay: 1000,
+        isRetryable: defaultIsRetryable,
+        onRetry: (attempt, err, delay) => {
+          console.warn(`Speech-to-text retry attempt ${attempt} after ${delay}ms:`, err);
+        },
+      }
+    );
 
     if (error) {
       throw new Error(error.message);
@@ -164,9 +187,31 @@ export async function detectSpokenLanguage(
       };
     }
 
-    const { data, error } = await supabase.functions.invoke('detect-language', {
-      body: requestValidation.data,
-    });
+    const { data, error } = await retry(
+      async () => {
+        const result = await supabase.functions.invoke('detect-language', {
+          body: requestValidation.data,
+        });
+
+        if (result.error) {
+          const err = new Error(result.error.message);
+          if ('status' in result.error) {
+            (err as Error & { status?: number }).status = (result.error as { status?: number }).status;
+          }
+          throw err;
+        }
+
+        return result;
+      },
+      {
+        maxRetries: 3,
+        initialDelay: 1000,
+        isRetryable: defaultIsRetryable,
+        onRetry: (attempt, err, delay) => {
+          console.warn(`Detect language retry attempt ${attempt} after ${delay}ms:`, err);
+        },
+      }
+    );
 
     if (error) {
       throw new Error(error.message);

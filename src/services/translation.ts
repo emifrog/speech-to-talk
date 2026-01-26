@@ -6,7 +6,8 @@ import {
   TranslateResponseSchema,
   safeValidateData
 } from '@/lib/validation';
-import { getCachedTranslation, saveToCache } from './translationCache';
+import { getCachedTranslationWithOffline, saveToCacheWithOffline } from './translationCache';
+import { retry, defaultIsRetryable } from '@/lib/retry';
 
 // ===========================================
 // Service de traduction
@@ -48,9 +49,9 @@ export async function translateText(
       };
     }
 
-    // 1. Vérifier le cache (sauf si skipCache est true)
+    // 1. Vérifier le cache avec support offline (sauf si skipCache est true)
     if (!params.skipCache) {
-      const cachedResult = await getCachedTranslation(
+      const cachedResult = await getCachedTranslationWithOffline(
         params.text,
         params.sourceLang,
         params.targetLang
@@ -67,12 +68,46 @@ export async function translateText(
       }
     }
 
-    // 2. Pas de cache, appeler l'API de traduction
+    // Check if offline and no cache hit
+    if (typeof navigator !== 'undefined' && !navigator.onLine) {
+      return {
+        success: false,
+        error: {
+          code: 'OFFLINE',
+          message: 'Vous êtes hors ligne et cette traduction n\'est pas en cache.',
+        },
+      };
+    }
+
+    // 2. Pas de cache, appeler l'API de traduction avec retry
     const supabase = createClient();
 
-    const { data, error } = await supabase.functions.invoke('translate', {
-      body: validationResult.data,
-    });
+    const { data, error } = await retry(
+      async () => {
+        const result = await supabase.functions.invoke('translate', {
+          body: validationResult.data,
+        });
+
+        if (result.error) {
+          const err = new Error(result.error.message);
+          // Attach status if available for retry logic
+          if ('status' in result.error) {
+            (err as Error & { status?: number }).status = (result.error as { status?: number }).status;
+          }
+          throw err;
+        }
+
+        return result;
+      },
+      {
+        maxRetries: 3,
+        initialDelay: 1000,
+        isRetryable: defaultIsRetryable,
+        onRetry: (attempt, err, delay) => {
+          console.warn(`Translation retry attempt ${attempt} after ${delay}ms:`, err);
+        },
+      }
+    );
 
     if (error) {
       throw new Error(error.message);
@@ -84,8 +119,8 @@ export async function translateText(
       throw new Error('Invalid response from translation service');
     }
 
-    // 3. Sauvegarder dans le cache (en arrière-plan, sans bloquer)
-    saveToCache(
+    // 3. Sauvegarder dans le cache avec support offline (en arrière-plan, sans bloquer)
+    saveToCacheWithOffline(
       params.text,
       responseValidation.data.translatedText,
       params.sourceLang,

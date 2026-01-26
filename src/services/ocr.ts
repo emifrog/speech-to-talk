@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/client';
 import type { LanguageCode, OCRResult, APIResponse } from '@/types';
+import { retry, defaultIsRetryable } from '@/lib/retry';
 
 // ===========================================
 // Service OCR (Google Cloud Vision)
@@ -19,12 +20,34 @@ export async function extractTextFromImage(
   try {
     const supabase = createClient();
 
-    const { data, error } = await supabase.functions.invoke('ocr', {
-      body: {
-        imageContent: params.imageContent,
-        languageHints: params.languageHints || ['en', 'it', 'es', 'ru'],
+    const { data, error } = await retry(
+      async () => {
+        const result = await supabase.functions.invoke('ocr', {
+          body: {
+            imageContent: params.imageContent,
+            languageHints: params.languageHints || ['en', 'it', 'es', 'ru'],
+          },
+        });
+
+        if (result.error) {
+          const err = new Error(result.error.message);
+          if ('status' in result.error) {
+            (err as Error & { status?: number }).status = (result.error as { status?: number }).status;
+          }
+          throw err;
+        }
+
+        return result;
       },
-    });
+      {
+        maxRetries: 3,
+        initialDelay: 1000,
+        isRetryable: defaultIsRetryable,
+        onRetry: (attempt, err, delay) => {
+          console.warn(`OCR retry attempt ${attempt} after ${delay}ms:`, err);
+        },
+      }
+    );
 
     if (error) {
       throw new Error(error.message);

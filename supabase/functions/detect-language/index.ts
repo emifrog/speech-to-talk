@@ -48,10 +48,12 @@ serve(async (req) => {
           config: {
             encoding: 'WEBM_OPUS',
             sampleRateHertz: 48000,
+            // Langue principale (obligatoire)
+            languageCode: 'fr-FR',
             // Alternative languages to detect
             alternativeLanguageCodes: [
-              'en-US', 'it-IT', 'es-ES', 'ru-RU', 
-              'fr-FR', 'de-DE', 'pt-PT', 'ar-SA',
+              'en-US', 'it-IT', 'es-ES', 'ru-RU',
+              'de-DE', 'pt-PT', 'ar-SA',
               'zh-CN', 'ja-JP', 'ko-KR'
             ],
             enableAutomaticPunctuation: true,

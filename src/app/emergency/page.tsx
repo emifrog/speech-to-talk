@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { BottomNavigation, EmergencyPhraseCard, UserMenu } from '@/components/features';
+import { BottomNavigation, EmergencyPhraseCard, SettingsMenu } from '@/components/features';
 import { EMERGENCY_CATEGORIES, EMERGENCY_PHRASES } from '@/lib/constants';
 import { useLanguages } from '@/lib/store';
 import { textToSpeech, playAudioFromBase64 } from '@/services/textToSpeech';
@@ -39,13 +39,23 @@ export default function EmergencyPage() {
   return (
     <div className="page-container">
       {/* Header */}
-      <div className="header-gradient-emergency px-4 pt-14 pb-6 safe-area-pt">
-        <div className="flex items-center justify-between max-w-lg mx-auto">
-          <div>
-            <h1 className="text-2xl font-bold text-white drop-shadow-sm">🚨 Urgence</h1>
-            <p className="text-white/90 text-sm">Phrases essentielles</p>
+      <div className="header-gradient-emergency safe-area-pt">
+        <div className="flex items-center justify-between max-w-lg mx-auto relative z-10">
+          <div className="flex items-center gap-4">
+            {/* Logo */}
+            <img
+              src="/icons/logo.png"
+              alt="Speech To Talk"
+              className="w-14 h-14 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.1)]"
+            />
+            <div>
+              <h1 className="text-2xl font-bold text-white drop-shadow-lg">
+                Urgence
+              </h1>
+              <p className="text-white/80 text-sm font-medium">Phrases essentielles</p>
+            </div>
           </div>
-          <UserMenu />
+          <SettingsMenu />
         </div>
       </div>
 
