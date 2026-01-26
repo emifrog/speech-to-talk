@@ -1,5 +1,6 @@
 'use client';
 
+import { useRef, useEffect, useCallback } from 'react';
 import { cn, formatDuration } from '@/lib/utils';
 import { startRecordingHaptic, stopRecordingHaptic, errorHaptic } from '@/lib/haptics';
 import { Mic, Square, Loader2 } from 'lucide-react';
@@ -26,36 +27,49 @@ export function MicrophoneButton({
   disabled = false,
   size = 'lg',
 }: MicrophoneButtonProps) {
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const isRecording = audioState === 'recording';
   const isProcessing = audioState === 'processing';
   const isPlaying = audioState === 'playing';
   const isError = audioState === 'error';
 
-  const handlePress = (e: React.MouseEvent | React.TouchEvent) => {
-    e.preventDefault(); // Empêcher le comportement par défaut
+  const handlePress = useCallback(() => {
     if (!disabled && audioState === 'idle') {
       startRecordingHaptic();
       onPress();
     }
-  };
+  }, [disabled, audioState, onPress]);
 
-  const handleRelease = (e: React.MouseEvent | React.TouchEvent) => {
-    e.preventDefault(); // Empêcher le comportement par défaut
-    if (isRecording) {
+  const handleRelease = useCallback(() => {
+    if (audioState === 'recording') {
       stopRecordingHaptic();
       onRelease();
     }
-  };
+  }, [audioState, onRelease]);
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    e.preventDefault(); // Crucial pour éviter le délai de 300ms sur mobile
-    handlePress(e);
-  };
+  // Utiliser useEffect pour attacher les événements touch avec passive: false
+  useEffect(() => {
+    const button = buttonRef.current;
+    if (!button) return;
 
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    e.preventDefault();
-    handleRelease(e);
-  };
+    const onTouchStart = (e: TouchEvent) => {
+      e.preventDefault();
+      handlePress();
+    };
+
+    const onTouchEnd = (e: TouchEvent) => {
+      e.preventDefault();
+      handleRelease();
+    };
+
+    button.addEventListener('touchstart', onTouchStart, { passive: false });
+    button.addEventListener('touchend', onTouchEnd, { passive: false });
+
+    return () => {
+      button.removeEventListener('touchstart', onTouchStart);
+      button.removeEventListener('touchend', onTouchEnd);
+    };
+  }, [handlePress, handleRelease]);
 
   // Haptic on error state
   if (isError) {
@@ -115,11 +129,10 @@ export function MicrophoneButton({
         )}>
           {/* Main button */}
           <button
+            ref={buttonRef}
             onMouseDown={handlePress}
             onMouseUp={handleRelease}
             onMouseLeave={handleRelease}
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
             disabled={disabled || isProcessing || isPlaying}
             className={cn(
               'relative rounded-full flex items-center justify-center transition-all duration-300 touch-manipulation',

@@ -84,7 +84,7 @@ export function SettingsMenu({ className }: SettingsMenuProps) {
           {/* Menu */}
           <div
             className={cn(
-              'fixed right-4 top-20 z-[100]',
+              'fixed right-4 top-16 z-[100]',
               'w-64 p-2',
               'bg-white dark:bg-slate-800',
               'border border-slate-200 dark:border-slate-700',

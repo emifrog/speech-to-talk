@@ -43,7 +43,7 @@ export function BottomNavigation() {
 
       {/* Navigation content */}
       <div className="relative max-w-lg mx-auto px-2">
-        <div className="flex justify-around items-end py-2">
+        <div className="flex justify-around items-end py-1">
           {navItems.map((item) => {
             const isActive = pathname === item.href ||
               (item.href === '/translate' && pathname === '/');
@@ -54,8 +54,8 @@ export function BottomNavigation() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'flex flex-col items-center justify-center py-2 px-4 rounded-2xl transition-all duration-200 active:scale-95',
-                  'min-w-[70px]',
+                  'flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all duration-200 active:scale-95',
+                  'min-w-[60px]',
                   isActive
                     ? item.isEmergency
                       ? 'text-accent'
@@ -65,13 +65,13 @@ export function BottomNavigation() {
               >
                 {/* Icon container */}
                 <div className={cn(
-                  'relative flex items-center justify-center w-12 h-12 rounded-2xl transition-all duration-200',
+                  'relative flex items-center justify-center w-9 h-9 rounded-xl transition-all duration-200',
                   isActive && !item.isEmergency && 'bg-primary/10 dark:bg-primary/20',
                   isActive && item.isEmergency && 'bg-accent/10 dark:bg-accent/20'
                 )}>
                   <Icon
                     className={cn(
-                      'w-6 h-6 transition-all duration-200',
+                      'w-5 h-5 transition-all duration-200',
                       isActive ? 'scale-110' : 'scale-100'
                     )}
                     strokeWidth={isActive ? 2.5 : 2}
@@ -81,7 +81,7 @@ export function BottomNavigation() {
                 {/* Label */}
                 <span
                   className={cn(
-                    'text-[10px] mt-1 transition-all duration-200',
+                    'text-[9px] mt-0.5 transition-all duration-200',
                     isActive ? 'font-bold' : 'font-medium'
                   )}
                 >
