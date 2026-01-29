@@ -3,6 +3,7 @@ import type { LanguageCode, TextToSpeechResult, APIResponse } from '@/types';
 import { base64ToBlob } from '@/lib/utils';
 import { getLanguageByCode } from '@/lib/constants';
 import { retry, defaultIsRetryable } from '@/lib/retry';
+import { checkRateLimit, recordRequest, RATE_LIMIT_CONFIGS } from '@/lib/rateLimit';
 
 // ===========================================
 // Service Text-to-Speech
@@ -28,6 +29,21 @@ export async function textToSpeech(
     if (!language) {
       throw new Error('Langue non supportée');
     }
+
+    // Check rate limit
+    const rateLimitCheck = checkRateLimit(RATE_LIMIT_CONFIGS.textToSpeech);
+    if (!rateLimitCheck.allowed) {
+      return {
+        success: false,
+        error: {
+          code: 'RATE_LIMIT_EXCEEDED',
+          message: `Trop de requêtes. Réessayez dans ${rateLimitCheck.retryAfter} secondes.`,
+        },
+      };
+    }
+
+    recordRequest(RATE_LIMIT_CONFIGS.textToSpeech.key);
+    recordRequest(RATE_LIMIT_CONFIGS.global.key);
 
     const { data, error } = await retry(
       async () => {

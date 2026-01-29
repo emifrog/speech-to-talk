@@ -2,12 +2,13 @@ import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import '@/styles/globals.css';
 import { Providers } from './providers';
+import { SkipLink } from '@/components/accessibility';
 
 const inter = Inter({ subsets: ['latin', 'cyrillic'] });
 
 export const metadata: Metadata = {
-  title: 'Speech To Talk - Traduction vocale médicale',
-  description: 'Application de traduction vocale en temps réel pour les situations médicales d\'urgence',
+  title: 'Speech To Talk - Traduction vocale pompiers',
+  description: 'Application de traduction vocale en temps réel pour les sapeurs-pompiers',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
@@ -40,8 +41,11 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body className={inter.className}>
+        <SkipLink />
         <Providers>
-          {children}
+          <div id="main-content" tabIndex={-1} className="outline-none">
+            {children}
+          </div>
         </Providers>
       </body>
     </html>

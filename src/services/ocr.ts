@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/client';
 import type { LanguageCode, OCRResult, APIResponse } from '@/types';
 import { retry, defaultIsRetryable } from '@/lib/retry';
+import { checkRateLimit, recordRequest, RATE_LIMIT_CONFIGS } from '@/lib/rateLimit';
 
 // ===========================================
 // Service OCR (Google Cloud Vision)
@@ -18,6 +19,21 @@ export async function extractTextFromImage(
   params: OCRParams
 ): Promise<APIResponse<OCRResult>> {
   try {
+    // Check rate limit
+    const rateLimitCheck = checkRateLimit(RATE_LIMIT_CONFIGS.ocr);
+    if (!rateLimitCheck.allowed) {
+      return {
+        success: false,
+        error: {
+          code: 'RATE_LIMIT_EXCEEDED',
+          message: `Trop de requêtes. Réessayez dans ${rateLimitCheck.retryAfter} secondes.`,
+        },
+      };
+    }
+
+    recordRequest(RATE_LIMIT_CONFIGS.ocr.key);
+    recordRequest(RATE_LIMIT_CONFIGS.global.key);
+
     const supabase = createClient();
 
     const { data, error } = await retry(

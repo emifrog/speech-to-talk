@@ -8,6 +8,7 @@ import {
 } from '@/lib/validation';
 import { getCachedTranslationWithOffline, saveToCacheWithOffline } from './translationCache';
 import { retry, defaultIsRetryable } from '@/lib/retry';
+import { checkRateLimit, recordRequest, RATE_LIMIT_CONFIGS } from '@/lib/rateLimit';
 
 // ===========================================
 // Service de traduction
@@ -78,6 +79,22 @@ export async function translateText(
         },
       };
     }
+
+    // Check rate limit before making API call
+    const rateLimitCheck = checkRateLimit(RATE_LIMIT_CONFIGS.translation);
+    if (!rateLimitCheck.allowed) {
+      return {
+        success: false,
+        error: {
+          code: 'RATE_LIMIT_EXCEEDED',
+          message: `Trop de requêtes. Réessayez dans ${rateLimitCheck.retryAfter} secondes.`,
+        },
+      };
+    }
+
+    // Record the request
+    recordRequest(RATE_LIMIT_CONFIGS.translation.key);
+    recordRequest(RATE_LIMIT_CONFIGS.global.key);
 
     // 2. Pas de cache, appeler l'API de traduction avec retry
     const supabase = createClient();

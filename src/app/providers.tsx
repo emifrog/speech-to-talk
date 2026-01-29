@@ -6,12 +6,13 @@ import { ThemeProvider } from '@/contexts/ThemeContext';
 import { ToastProvider } from '@/components/ui';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { ConnectionStatus } from '@/components/OfflineIndicator';
+import { captureError, addBreadcrumb } from '@/lib/sentry';
 
 // ===========================================
 // Providers wrapper pour l'application
 // ===========================================
 
-// Error handler for logging
+// Error handler for logging and Sentry
 function handleGlobalError(error: Error, errorInfo: React.ErrorInfo) {
   // Log to console in development
   if (process.env.NODE_ENV === 'development') {
@@ -19,8 +20,16 @@ function handleGlobalError(error: Error, errorInfo: React.ErrorInfo) {
     console.error('Component Stack:', errorInfo.componentStack);
   }
 
-  // TODO: Send to error monitoring service
-  // Example: Sentry.captureException(error, { extra: errorInfo });
+  // Send to Sentry
+  captureError(error, {
+    tags: {
+      type: 'react-error-boundary',
+    },
+    extra: {
+      componentStack: errorInfo.componentStack,
+    },
+    level: 'error',
+  });
 }
 
 export function Providers({ children }: { children: ReactNode }) {

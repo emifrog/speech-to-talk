@@ -9,6 +9,7 @@ import {
   safeValidateData
 } from '@/lib/validation';
 import { retry, defaultIsRetryable } from '@/lib/retry';
+import { checkRateLimit, recordRequest, RATE_LIMIT_CONFIGS } from '@/lib/rateLimit';
 
 // ===========================================
 // Service de reconnaissance vocale
@@ -84,6 +85,22 @@ export async function speechToText(
         },
       };
     }
+
+    // Check rate limit
+    const rateLimitCheck = checkRateLimit(RATE_LIMIT_CONFIGS.speechToText);
+    if (!rateLimitCheck.allowed) {
+      return {
+        success: false,
+        error: {
+          code: 'RATE_LIMIT_EXCEEDED',
+          message: `Trop de requêtes. Réessayez dans ${rateLimitCheck.retryAfter} secondes.`,
+        },
+      };
+    }
+
+    // Record the request
+    recordRequest(RATE_LIMIT_CONFIGS.speechToText.key);
+    recordRequest(RATE_LIMIT_CONFIGS.global.key);
 
     const { data, error } = await retry(
       async () => {
@@ -186,6 +203,21 @@ export async function detectSpokenLanguage(
         },
       };
     }
+
+    // Check rate limit
+    const rateLimitCheck = checkRateLimit(RATE_LIMIT_CONFIGS.detectLanguage);
+    if (!rateLimitCheck.allowed) {
+      return {
+        success: false,
+        error: {
+          code: 'RATE_LIMIT_EXCEEDED',
+          message: `Trop de requêtes. Réessayez dans ${rateLimitCheck.retryAfter} secondes.`,
+        },
+      };
+    }
+
+    recordRequest(RATE_LIMIT_CONFIGS.detectLanguage.key);
+    recordRequest(RATE_LIMIT_CONFIGS.global.key);
 
     const { data, error } = await retry(
       async () => {
