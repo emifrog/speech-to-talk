@@ -1,14 +1,23 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
+import dynamic from 'next/dynamic';
 import { BottomNavigation, SettingsMenu } from '@/components/features';
 import { Camera, Upload, Volume2, Copy, RefreshCw, AlertCircle, Check, X, Loader2 } from 'lucide-react';
-import { extractTextFromImage, fileToBase64, isValidImageFile, isValidFileSize, compressImage } from '@/services/ocr';
-import { translateText } from '@/services/translation';
-import { textToSpeech, playAudioFromBase64 } from '@/services/textToSpeech';
 import { useLanguages } from '@/lib/store';
 import { SUPPORTED_LANGUAGES, getLanguageByCode } from '@/lib/constants';
 import type { LanguageCode, OCRResult } from '@/types';
+
+// Lazy load validation functions (sync, small)
+const isValidImageFile = (file: File) => {
+  const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/bmp'];
+  return validTypes.includes(file.type);
+};
+
+const isValidFileSize = (file: File, maxSizeMB = 10) => {
+  const maxSizeBytes = maxSizeMB * 1024 * 1024;
+  return file.size <= maxSizeBytes;
+};
 
 type ScanState = 'idle' | 'uploading' | 'extracting' | 'translating' | 'speaking' | 'done' | 'error';
 
@@ -69,8 +78,9 @@ export default function ScanPage() {
       // Créer l'aperçu de l'image
       const imagePreview = URL.createObjectURL(file);
 
-      // Compresser et convertir en base64
+      // Lazy load OCR service
       setScanState('extracting');
+      const { compressImage, extractTextFromImage } = await import('@/services/ocr');
       const base64Content = await compressImage(file);
 
       // Appeler l'API OCR
@@ -95,8 +105,9 @@ export default function ScanPage() {
       // Déterminer la langue source
       const detectedLang = ocrResult.detectedLanguage || sourceLang;
 
-      // Traduire le texte extrait
+      // Lazy load translation service
       setScanState('translating');
+      const { translateText } = await import('@/services/translation');
       const translationResponse = await translateText({
         text: ocrResult.text,
         sourceLang: detectedLang,
@@ -107,8 +118,9 @@ export default function ScanPage() {
         throw new Error(translationResponse.error?.message || 'Erreur de traduction');
       }
 
-      // Générer l'audio de la traduction
+      // Lazy load TTS service
       setScanState('speaking');
+      const { textToSpeech } = await import('@/services/textToSpeech');
       const ttsResponse = await textToSpeech({
         text: translationResponse.data!.translatedText,
         languageCode: targetLang,
@@ -141,6 +153,7 @@ export default function ScanPage() {
 
     try {
       setIsPlaying(true);
+      const { playAudioFromBase64 } = await import('@/services/textToSpeech');
       await playAudioFromBase64(audioContent);
     } catch (error) {
       console.error('Audio playback error:', error);

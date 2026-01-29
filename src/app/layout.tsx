@@ -7,7 +7,7 @@ import { SkipLink } from '@/components/accessibility';
 const inter = Inter({ subsets: ['latin', 'cyrillic'] });
 
 export const metadata: Metadata = {
-  title: 'Speech To Talk - Traduction vocale pompiers',
+  title: 'Speech To Talk - Traduction vocale intelligente',
   description: 'Application de traduction vocale en temps réel pour les sapeurs-pompiers',
   manifest: '/manifest.json',
   appleWebApp: {

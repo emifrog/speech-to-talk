@@ -39,6 +39,11 @@ const nextConfig = {
     NEXT_PUBLIC_APP_NAME: 'Speech To Talk',
     NEXT_PUBLIC_APP_VERSION: '1.0.0',
   },
+
+  // Optimisation du bundle - tree shaking auto pour ces packages
+  experimental: {
+    optimizePackageImports: ['lucide-react', 'zod'],
+  },
 };
 
 // Sentry configuration options

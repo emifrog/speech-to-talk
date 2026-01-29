@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { BottomNavigation, EmergencyPhraseCard, SettingsMenu } from '@/components/features';
 import { EMERGENCY_CATEGORIES, EMERGENCY_PHRASES } from '@/lib/constants';
 import { useLanguages } from '@/lib/store';
-import { textToSpeech, playAudioFromBase64 } from '@/services/textToSpeech';
 import { cn } from '@/lib/utils';
 import type { EmergencyCategory } from '@/types';
 
@@ -20,7 +19,10 @@ export default function EmergencyPage() {
   const handlePlay = async (phraseId: string, text: string) => {
     try {
       setPlayingId(phraseId);
-      
+
+      // Lazy load TTS service only when needed
+      const { textToSpeech, playAudioFromBase64 } = await import('@/services/textToSpeech');
+
       const result = await textToSpeech({
         text,
         languageCode: targetLang,
