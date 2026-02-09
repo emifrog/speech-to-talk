@@ -26,22 +26,15 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-slate-50 dark:bg-dark flex flex-col">
       {/* Header */}
       <div className="header-gradient px-6 pt-12 pb-16">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center">
-            <svg viewBox="0 0 100 100" className="w-10 h-10">
-              <circle cx="55" cy="40" r="28" fill="#2E5DA8" stroke="#1A1A2E" strokeWidth="3"/>
-              <circle cx="45" cy="40" r="3" fill="#1A1A2E"/>
-              <circle cx="55" cy="40" r="3" fill="#1A1A2E"/>
-              <circle cx="65" cy="40" r="3" fill="#1A1A2E"/>
-              <circle cx="35" cy="60" r="18" fill="#E63946" stroke="#1A1A2E" strokeWidth="3"/>
-              <circle cx="29" cy="60" r="2" fill="#1A1A2E"/>
-              <circle cx="35" cy="60" r="2" fill="#1A1A2E"/>
-              <circle cx="41" cy="60" r="2" fill="#1A1A2E"/>
-            </svg>
-          </div>
+          <img
+            src="/icons/logo.png"
+            alt="Speech To Talk"
+            className="w-12 h-12 rounded-xl shadow-glass"
+          />
           <div>
             <h1 className="text-2xl font-bold text-white">
               Speech To Talk
@@ -51,11 +44,11 @@ export default function LoginPage() {
       </div>
 
       {/* Content */}
-      <div className="flex-1 bg-gray-50 rounded-t-3xl -mt-6 relative z-10 px-6 py-8">
-        <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="flex-1 bg-slate-50 dark:bg-dark rounded-t-3xl -mt-6 relative z-10 px-6 py-8">
+        <form onSubmit={handleSubmit} className="space-y-6 max-w-md mx-auto">
           {/* Error message */}
           {error && (
-            <div className="p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3 text-red-700">
+            <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl flex items-center gap-3 text-red-700 dark:text-red-400 animate-slide-up">
               <AlertCircle className="w-5 h-5 flex-shrink-0" />
               <span className="text-sm">{error}</span>
             </div>
@@ -63,11 +56,11 @@ export default function LoginPage() {
 
           {/* Email */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="email" className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">
               Adresse email
             </label>
             <div className="relative">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 dark:text-slate-500" />
               <input
                 id="email"
                 type="email"
@@ -75,18 +68,19 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="votre@email.com"
                 required
-                className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                autoComplete="email"
+                className="w-full pl-12 pr-4 py-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
               />
             </div>
           </div>
 
           {/* Password */}
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="password" className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">
               Mot de passe
             </label>
             <div className="relative">
-              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 dark:text-slate-500" />
               <input
                 id="password"
                 type={showPassword ? 'text' : 'password'}
@@ -95,12 +89,14 @@ export default function LoginPage() {
                 placeholder="••••••••"
                 required
                 minLength={6}
-                className="w-full pl-12 pr-12 py-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                autoComplete="current-password"
+                className="w-full pl-12 pr-12 py-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+                aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
               >
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
@@ -109,7 +105,7 @@ export default function LoginPage() {
 
           {/* Forgot password */}
           <div className="text-right">
-            <Link href="/auth/forgot-password" className="text-sm text-primary hover:underline">
+            <Link href="/auth/forgot-password" className="text-sm text-primary dark:text-primary-400 hover:underline">
               Mot de passe oublié ?
             </Link>
           </div>
@@ -126,20 +122,20 @@ export default function LoginPage() {
           </Button>
 
           {/* Register link */}
-          <p className="text-center text-gray-600">
+          <p className="text-center text-slate-600 dark:text-slate-400">
             Pas encore de compte ?{' '}
-            <Link href="/auth/register" className="text-primary font-medium hover:underline">
+            <Link href="/auth/register" className="text-primary dark:text-primary-400 font-medium hover:underline">
               S&apos;inscrire
             </Link>
           </p>
 
-          {/* Continue without account */}
+          {/* Divider */}
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200" />
+              <div className="w-full border-t border-slate-200 dark:border-slate-700" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-gray-50 text-gray-500">ou</span>
+              <span className="px-4 bg-slate-50 dark:bg-dark text-slate-500 dark:text-slate-400">ou</span>
             </div>
           </div>
 

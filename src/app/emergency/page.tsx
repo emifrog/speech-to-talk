@@ -2,15 +2,17 @@
 
 import { useState } from 'react';
 import { BottomNavigation, EmergencyPhraseCard, SettingsMenu } from '@/components/features';
+import { useToast } from '@/components/ui';
 import { EMERGENCY_CATEGORIES, EMERGENCY_PHRASES } from '@/lib/constants';
 import { useLanguages } from '@/lib/store';
 import { cn } from '@/lib/utils';
 import type { EmergencyCategory } from '@/types';
 
 export default function EmergencyPage() {
-  const [selectedCategory, setSelectedCategory] = useState<EmergencyCategory>('pain');
+  const [selectedCategory, setSelectedCategory] = useState<EmergencyCategory>('medical');
   const [playingId, setPlayingId] = useState<string | null>(null);
   const { sourceLang, targetLang } = useLanguages();
+  const toast = useToast();
 
   const filteredPhrases = EMERGENCY_PHRASES
     .filter((phrase) => phrase.category === selectedCategory)
@@ -33,6 +35,7 @@ export default function EmergencyPage() {
       }
     } catch (error) {
       console.error('Error playing audio:', error);
+      toast.error('Erreur de lecture audio');
     } finally {
       setPlayingId(null);
     }
@@ -54,7 +57,7 @@ export default function EmergencyPage() {
               <h1 className="text-2xl font-bold text-white drop-shadow-lg">
                 Urgence
               </h1>
-              <p className="text-white/80 text-sm font-medium">Phrases essentielles</p>
+              <p className="text-white/80 text-sm font-medium">Phrases sapeurs-pompiers</p>
             </div>
           </div>
           <SettingsMenu />
@@ -73,7 +76,7 @@ export default function EmergencyPage() {
                 'px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all shadow-soft active:scale-95',
                 selectedCategory === category.id
                   ? 'bg-gradient-to-r from-accent to-accent-600 text-white shadow-glow-accent'
-                  : 'bg-white text-gray-600 hover:bg-gray-50 hover:shadow-medium'
+                  : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 hover:shadow-medium'
               )}
             >
               {category.icon} {category.label}
@@ -104,12 +107,12 @@ export default function EmergencyPage() {
         {/* Empty state */}
         {filteredPhrases.length === 0 && (
           <div className="text-center py-12 animate-fade-in">
-            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-slate-400 dark:text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
               </svg>
             </div>
-            <p className="text-gray-500 font-medium">Aucune phrase dans cette catégorie</p>
+            <p className="text-slate-500 dark:text-slate-400 font-medium">Aucune phrase dans cette catégorie</p>
           </div>
         )}
       </div>

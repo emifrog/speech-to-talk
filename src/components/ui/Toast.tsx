@@ -97,19 +97,19 @@ function ToastItem({ toast, onDismiss }: ToastItemProps) {
   };
 
   const bgColors = {
-    success: 'bg-success-50 border-success-200',
-    error: 'bg-red-50 border-red-200',
-    warning: 'bg-warning-50 border-warning-200',
-    info: 'bg-primary-50 border-primary-200',
-    loading: 'bg-gray-50 border-gray-200',
+    success: 'bg-success-50 dark:bg-success/10 border-success-200 dark:border-success/30',
+    error: 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800/50',
+    warning: 'bg-warning-50 dark:bg-warning/10 border-warning-200 dark:border-warning/30',
+    info: 'bg-primary-50 dark:bg-primary/10 border-primary-200 dark:border-primary/30',
+    loading: 'bg-gray-50 dark:bg-slate-800 border-gray-200 dark:border-slate-700',
   };
 
   const textColors = {
-    success: 'text-success-700',
-    error: 'text-red-700',
-    warning: 'text-warning-700',
-    info: 'text-primary-700',
-    loading: 'text-gray-700',
+    success: 'text-success-700 dark:text-success-400',
+    error: 'text-red-700 dark:text-red-400',
+    warning: 'text-warning-700 dark:text-warning-400',
+    info: 'text-primary-700 dark:text-primary-400',
+    loading: 'text-gray-700 dark:text-slate-300',
   };
 
   return (

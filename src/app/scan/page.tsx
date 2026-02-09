@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import { BottomNavigation, SettingsMenu } from '@/components/features';
+import { useToast } from '@/components/ui';
 import { Camera, Upload, Volume2, Copy, RefreshCw, AlertCircle, Check, X, Loader2 } from 'lucide-react';
 import { useLanguages } from '@/lib/store';
 import { SUPPORTED_LANGUAGES, getLanguageByCode } from '@/lib/constants';
@@ -32,6 +33,7 @@ interface ScanResult {
 
 export default function ScanPage() {
   const { sourceLang, targetLang, setSourceLang, setTargetLang } = useLanguages();
+  const toast = useToast();
 
   const [scanState, setScanState] = useState<ScanState>('idle');
   const [scanResult, setScanResult] = useState<ScanResult | null>(null);
@@ -143,8 +145,10 @@ export default function ScanPage() {
       setScanState('done');
     } catch (error) {
       console.error('Scan error:', error);
-      setErrorMessage(error instanceof Error ? error.message : 'Une erreur est survenue');
+      const msg = error instanceof Error ? error.message : 'Une erreur est survenue';
+      setErrorMessage(msg);
       setScanState('error');
+      toast.error(msg);
     }
   };
 
@@ -157,6 +161,7 @@ export default function ScanPage() {
       await playAudioFromBase64(audioContent);
     } catch (error) {
       console.error('Audio playback error:', error);
+      toast.error('Erreur de lecture audio');
     } finally {
       setIsPlaying(false);
     }
@@ -168,9 +173,10 @@ export default function ScanPage() {
     try {
       await navigator.clipboard.writeText(scanResult.translatedText);
       setCopied(true);
+      toast.success('Texte copié');
       setTimeout(() => setCopied(false), 2000);
-    } catch (error) {
-      console.error('Copy error:', error);
+    } catch {
+      toast.error('Impossible de copier le texte');
     }
   };
 
@@ -263,7 +269,7 @@ export default function ScanPage() {
               Prenez une photo ou importez
             </p>
             <p className="text-slate-400 dark:text-slate-500 text-sm mb-4">
-              Ordonnances, notices, documents médicaux
+              Panneaux, documents, notices
             </p>
             <div className="flex gap-3 justify-center">
               <label className="px-4 py-2 bg-primary text-white rounded-xl text-sm font-medium cursor-pointer hover:bg-primary-600 transition-colors flex items-center gap-2">

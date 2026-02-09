@@ -33,13 +33,13 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-dark flex flex-col">
+    <div className="min-h-screen bg-slate-50 dark:bg-dark flex flex-col">
       {/* Header */}
       <div className="header-gradient px-6 pt-12 pb-16">
         <div className="flex items-center gap-3">
           <Link
             href="/auth/login"
-            className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-colors"
+            className="w-11 h-11 bg-white/20 rounded-xl flex items-center justify-center hover:bg-white/30 transition-colors"
             aria-label="Retour"
           >
             <ArrowLeft className="w-5 h-5 text-white" />
@@ -54,25 +54,24 @@ export default function ForgotPasswordPage() {
       </div>
 
       {/* Content */}
-      <div className="flex-1 bg-gray-50 dark:bg-dark rounded-t-3xl -mt-6 relative z-10 px-6 py-8">
+      <div className="flex-1 bg-slate-50 dark:bg-dark rounded-t-3xl -mt-6 relative z-10 px-6 py-8">
         {isSuccess ? (
-          // Success state
-          <div className="text-center py-8 animate-fade-in">
-            <div className="w-20 h-20 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-6">
-              <CheckCircle className="w-10 h-10 text-success" />
+          <div className="text-center py-8 animate-fade-in max-w-md mx-auto">
+            <div className="w-20 h-20 bg-success/10 dark:bg-success/20 rounded-full flex items-center justify-center mx-auto mb-6">
+              <CheckCircle className="w-10 h-10 text-success dark:text-success-400" />
             </div>
-            <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-3">
+            <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-3">
               Email envoyé !
             </h2>
-            <p className="text-gray-600 dark:text-gray-300 mb-6 max-w-sm mx-auto">
-              Nous avons envoyé un lien de réinitialisation à <strong>{email}</strong>.
+            <p className="text-slate-600 dark:text-slate-300 mb-6 max-w-sm mx-auto">
+              Nous avons envoyé un lien de réinitialisation à <strong className="text-slate-800 dark:text-white">{email}</strong>.
               Vérifiez votre boîte mail et suivez les instructions.
             </p>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">
+            <p className="text-sm text-slate-500 dark:text-slate-400 mb-8">
               Vous n&apos;avez pas reçu l&apos;email ? Vérifiez vos spams ou{' '}
               <button
                 onClick={() => setIsSuccess(false)}
-                className="text-primary font-medium hover:underline"
+                className="text-primary dark:text-primary-400 font-medium hover:underline"
               >
                 réessayez
               </button>
@@ -84,10 +83,9 @@ export default function ForgotPasswordPage() {
             </Link>
           </div>
         ) : (
-          // Form state
           <form onSubmit={handleSubmit} className="space-y-6 max-w-md mx-auto">
             <div className="text-center mb-8">
-              <p className="text-gray-600 dark:text-gray-300">
+              <p className="text-slate-600 dark:text-slate-300">
                 Entrez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe.
               </p>
             </div>
@@ -102,11 +100,11 @@ export default function ForgotPasswordPage() {
 
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">
                 Adresse email
               </label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 dark:text-slate-500" />
                 <input
                   id="email"
                   type="email"
@@ -115,7 +113,7 @@ export default function ForgotPasswordPage() {
                   placeholder="votre@email.com"
                   required
                   autoComplete="email"
-                  className="w-full pl-12 pr-4 py-3 bg-white dark:bg-dark-light border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-gray-900 dark:text-white placeholder-gray-400"
+                  className="w-full pl-12 pr-4 py-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500"
                 />
               </div>
             </div>
@@ -132,9 +130,9 @@ export default function ForgotPasswordPage() {
             </Button>
 
             {/* Back to login */}
-            <p className="text-center text-gray-600 dark:text-gray-400">
+            <p className="text-center text-slate-600 dark:text-slate-400">
               Vous vous souvenez de votre mot de passe ?{' '}
-              <Link href="/auth/login" className="text-primary font-medium hover:underline">
+              <Link href="/auth/login" className="text-primary dark:text-primary-400 font-medium hover:underline">
                 Se connecter
               </Link>
             </p>

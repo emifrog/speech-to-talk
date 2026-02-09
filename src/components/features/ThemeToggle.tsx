@@ -23,6 +23,7 @@ export function SettingsMenu({ className }: SettingsMenuProps) {
   const handleToggleTheme = () => {
     lightHaptic();
     toggleTheme();
+    setIsOpen(false);
   };
 
   const handleOpenMenu = () => {
@@ -35,7 +36,24 @@ export function SettingsMenu({ className }: SettingsMenuProps) {
     setIsOpen(false);
   };
 
-  // Fermer le menu si on clique en dehors
+  // Close on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen]);
+
+  // Close on click outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -54,45 +72,49 @@ export function SettingsMenu({ className }: SettingsMenuProps) {
 
   return (
     <div className={cn('relative z-50', className)} ref={menuRef}>
-      {/* Bouton menu */}
+      {/* Menu button - 44px for firefighter accessibility */}
       <button
         onClick={handleOpenMenu}
         className={cn(
-          'w-8 h-8 rounded-xl flex items-center justify-center',
-          'bg-white dark:bg-slate-800',
-          'border-2 border-primary-200 dark:border-slate-600',
-          'shadow-[0_4px_20px_rgba(0,0,0,0.2)]',
+          'w-11 h-11 rounded-xl flex items-center justify-center',
+          'bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm',
+          'border border-white/50 dark:border-slate-600',
+          'shadow-soft',
           'transition-all duration-300',
-          'hover:scale-110 hover:bg-primary-50 dark:hover:bg-slate-700 active:scale-95',
-          'focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2'
+          'hover:scale-105 hover:bg-white dark:hover:bg-slate-700 active:scale-95',
+          'focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-primary'
         )}
         aria-label="Ouvrir le menu"
         aria-expanded={isOpen}
+        aria-haspopup="true"
       >
-        <Menu className="w-4 h-4 text-primary-600 dark:text-white" strokeWidth={2.5} />
+        <Menu className="w-5 h-5 text-primary-600 dark:text-white" strokeWidth={2.5} />
       </button>
 
-      {/* Menu déroulant */}
+      {/* Dropdown menu */}
       {isOpen && (
         <>
           {/* Overlay */}
           <div
-            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 animate-fade-in"
+            className="fixed inset-0 bg-black/20 dark:bg-black/40 backdrop-blur-sm z-40 animate-fade-in"
             onClick={handleCloseMenu}
+            aria-hidden="true"
           />
 
-          {/* Menu */}
+          {/* Menu panel */}
           <div
             className={cn(
               'fixed right-4 top-16 z-[100]',
-              'w-64 p-2',
-              'bg-white dark:bg-slate-800',
-              'border border-slate-200 dark:border-slate-700',
-              'rounded-2xl shadow-2xl',
+              'w-72 p-2',
+              'bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl',
+              'border border-slate-200/50 dark:border-slate-700/50',
+              'rounded-2xl shadow-strong dark:shadow-none',
               'animate-slide-up'
             )}
+            role="menu"
+            aria-label="Menu paramètres"
           >
-            {/* Header du menu */}
+            {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-primary-500 to-primary-600 rounded-xl mb-2">
               <span className="text-base font-bold text-white">
                 Menu
@@ -100,57 +122,60 @@ export function SettingsMenu({ className }: SettingsMenuProps) {
               <button
                 onClick={handleCloseMenu}
                 className="w-8 h-8 rounded-lg flex items-center justify-center bg-white/20 hover:bg-white/30 transition-colors"
+                aria-label="Fermer le menu"
               >
                 <X className="w-5 h-5 text-white" />
               </button>
             </div>
 
-            {/* Option: Connexion */}
+            {/* Login */}
             <Link
               href="/auth/login"
               onClick={handleCloseMenu}
               className={cn(
                 'flex items-center gap-3 px-3 py-3 rounded-xl',
                 'text-slate-700 dark:text-slate-200',
-                'hover:bg-slate-100 dark:hover:bg-dark-lighter',
+                'hover:bg-slate-100 dark:hover:bg-slate-700/50',
                 'transition-all duration-200',
                 'group'
               )}
+              role="menuitem"
             >
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
-                <LogIn className="w-4 h-4 text-white" />
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
+                <LogIn className="w-5 h-5 text-white" />
               </div>
               <div>
-                <p className="text-sm text-black dark:text-white font-medium">Connexion</p>
+                <p className="text-sm text-slate-800 dark:text-white font-medium">Connexion</p>
                 <p className="text-xs text-slate-500 dark:text-slate-400">Se connecter ou créer un compte</p>
               </div>
             </Link>
 
-            {/* Option: Mode sombre/clair */}
+            {/* Dark/Light mode toggle */}
             <button
               onClick={handleToggleTheme}
               className={cn(
                 'w-full flex items-center gap-3 px-3 py-3 rounded-xl',
                 'text-slate-700 dark:text-slate-200',
-                'hover:bg-slate-100 dark:hover:bg-dark-lighter',
+                'hover:bg-slate-100 dark:hover:bg-slate-700/50',
                 'transition-all duration-200',
                 'group'
               )}
+              role="menuitem"
             >
               <div className={cn(
-                'w-9 h-9 rounded-xl flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow',
+                'w-10 h-10 rounded-xl flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow',
                 resolvedTheme === 'dark'
                   ? 'bg-gradient-to-br from-amber-400 to-orange-500'
                   : 'bg-gradient-to-br from-indigo-400 to-purple-600'
               )}>
                 {resolvedTheme === 'dark' ? (
-                  <Sun className="w-4 h-4 text-white" />
+                  <Sun className="w-5 h-5 text-white" />
                 ) : (
-                  <Moon className="w-4 h-4 text-white" />
+                  <Moon className="w-5 h-5 text-white" />
                 )}
               </div>
               <div className="text-left">
-                <p className="text-sm text-black dark:text-white font-medium">
+                <p className="text-sm text-slate-800 dark:text-white font-medium">
                   {resolvedTheme === 'dark' ? 'Mode clair' : 'Mode sombre'}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -159,23 +184,24 @@ export function SettingsMenu({ className }: SettingsMenuProps) {
               </div>
             </button>
 
-            {/* Option: Contact */}
+            {/* Contact */}
             <Link
               href="/contact"
               onClick={handleCloseMenu}
               className={cn(
                 'flex items-center gap-3 px-3 py-3 rounded-xl',
                 'text-slate-700 dark:text-slate-200',
-                'hover:bg-slate-100 dark:hover:bg-dark-lighter',
+                'hover:bg-slate-100 dark:hover:bg-slate-700/50',
                 'transition-all duration-200',
                 'group'
               )}
+              role="menuitem"
             >
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
-                <Mail className="w-4 h-4 text-white" />
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
+                <Mail className="w-5 h-5 text-white" />
               </div>
               <div>
-                <p className="text-sm text-black dark:text-white font-medium">Contact</p>
+                <p className="text-sm text-slate-800 dark:text-white font-medium">Contact</p>
                 <p className="text-xs text-slate-500 dark:text-slate-400">Nous envoyer un message</p>
               </div>
             </Link>
@@ -183,40 +209,5 @@ export function SettingsMenu({ className }: SettingsMenuProps) {
         </>
       )}
     </div>
-  );
-}
-
-// Garder l'ancien composant pour compatibilité
-export function ThemeToggle({ className }: { className?: string }) {
-  const { resolvedTheme, toggleTheme } = useTheme();
-
-  const handleToggle = () => {
-    lightHaptic();
-    toggleTheme();
-  };
-
-  return (
-    <button
-      onClick={handleToggle}
-      className={cn(
-        'w-10 h-10 rounded-xl flex items-center justify-center',
-        'bg-white/60 dark:bg-dark-light/60',
-        'backdrop-blur-xl',
-        'border border-white/50 dark:border-white/10',
-        'shadow-glass hover:shadow-glass-lg',
-        'transition-all duration-300',
-        'hover:scale-105 active:scale-95',
-        'focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2',
-        'dark:focus:ring-offset-dark',
-        className
-      )}
-      aria-label={resolvedTheme === 'dark' ? 'Activer le mode clair' : 'Activer le mode sombre'}
-    >
-      {resolvedTheme === 'dark' ? (
-        <Sun className="w-5 h-5 text-amber-400" />
-      ) : (
-        <Moon className="w-5 h-5 text-slate-600" />
-      )}
-    </button>
   );
 }

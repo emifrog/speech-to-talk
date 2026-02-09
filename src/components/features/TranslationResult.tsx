@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui';
 import { getLanguageByCode } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import type { TranslationResult as TranslationResultType } from '@/types';
+import { useToast } from '@/components/ui';
 import { Volume2, Heart, Copy, Check } from 'lucide-react';
 import { useState } from 'react';
 
@@ -27,14 +28,20 @@ export function TranslationResult({
   isFavorite = false,
 }: TranslationResultProps) {
   const [copied, setCopied] = useState(false);
+  const toast = useToast();
 
   const sourceLanguage = getLanguageByCode(result.sourceLang);
   const targetLanguage = getLanguageByCode(result.targetLang);
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(result.translatedText);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      await navigator.clipboard.writeText(result.translatedText);
+      setCopied(true);
+      toast.success('Traduction copiée');
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error('Impossible de copier le texte');
+    }
   };
 
   return (

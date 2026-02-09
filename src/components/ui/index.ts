@@ -1,4 +1,5 @@
 export { Button, type ButtonProps } from './Button';
+export { ConfirmDialog } from './ConfirmDialog';
 export {
   Card,
   CardHeader,

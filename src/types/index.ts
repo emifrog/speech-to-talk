@@ -57,8 +57,8 @@ export interface TextToSpeechResult {
   audioUrl?: string;
 }
 
-// ----- Phrases d'urgence -----
-export type EmergencyCategory = 'pain' | 'breathing' | 'allergies' | 'medication' | 'general';
+// ----- Phrases d'urgence (Sapeurs-Pompiers) -----
+export type EmergencyCategory = 'medical' | 'fire' | 'reassurance' | 'evacuation' | 'general';
 
 export interface EmergencyPhrase {
   id: string;

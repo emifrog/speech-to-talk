@@ -39,7 +39,7 @@ export function SkeletonText({ lines = 3, className }: { lines?: number; classNa
 // Skeleton for cards
 export function SkeletonCard({ className }: SkeletonProps) {
   return (
-    <div className={cn('bg-white rounded-2xl shadow-soft p-4 space-y-4', className)}>
+    <div className={cn('bg-white dark:bg-slate-800rounded-2xl shadow-soft p-4 space-y-4', className)}>
       <div className="flex items-center gap-3">
         <Skeleton className="w-12 h-12 rounded-full" />
         <div className="flex-1 space-y-2">
@@ -56,7 +56,7 @@ export function SkeletonCard({ className }: SkeletonProps) {
 export function SkeletonLanguageSelector() {
   return (
     <div className="flex items-center justify-between gap-3">
-      <div className="flex-1 bg-white rounded-xl p-4 shadow-soft">
+      <div className="flex-1 bg-white dark:bg-slate-800rounded-xl p-4 shadow-soft">
         <Skeleton className="h-3 w-8 mb-2" />
         <div className="flex items-center gap-2">
           <Skeleton className="w-8 h-8 rounded-full" />
@@ -64,7 +64,7 @@ export function SkeletonLanguageSelector() {
         </div>
       </div>
       <Skeleton className="w-10 h-10 rounded-full" />
-      <div className="flex-1 bg-white rounded-xl p-4 shadow-soft">
+      <div className="flex-1 bg-white dark:bg-slate-800rounded-xl p-4 shadow-soft">
         <Skeleton className="h-3 w-10 mb-2" />
         <div className="flex items-center gap-2">
           <Skeleton className="w-8 h-8 rounded-full" />
@@ -91,15 +91,15 @@ export function SkeletonMicrophoneButton() {
 // Skeleton for translation result
 export function SkeletonTranslationResult() {
   return (
-    <div className="bg-white rounded-2xl shadow-soft p-5 space-y-4">
+    <div className="bg-white dark:bg-slate-800rounded-2xl shadow-soft p-5 space-y-4">
       <div className="flex items-center gap-2">
         <Skeleton className="w-8 h-8 rounded-full" />
         <Skeleton className="h-4 w-24" />
       </div>
-      <div className="bg-gray-50 rounded-xl p-4">
+      <div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4">
         <SkeletonText lines={2} />
       </div>
-      <div className="h-px bg-gray-100" />
+      <div className="h-px bg-slate-100 dark:bg-slate-700" />
       <div className="flex items-center gap-2">
         <Skeleton className="w-8 h-8 rounded-full" />
         <Skeleton className="h-4 w-24" />
@@ -118,7 +118,7 @@ export function SkeletonTranslationResult() {
 // Skeleton for emergency phrase card
 export function SkeletonEmergencyCard() {
   return (
-    <div className="bg-white rounded-2xl shadow-soft p-4">
+    <div className="bg-white dark:bg-slate-800rounded-2xl shadow-soft p-4">
       <div className="flex items-start gap-4">
         <Skeleton className="w-12 h-12 rounded-xl" />
         <div className="flex-1 space-y-2">
@@ -141,10 +141,10 @@ export function SkeletonConversationMessage({ isRight = false }: { isRight?: boo
           <Skeleton className="h-3 w-16" />
           <Skeleton className="w-6 h-6 rounded-full" />
         </div>
-        <div className={cn('rounded-2xl p-4 w-full', isRight ? 'bg-accent/10' : 'bg-white shadow-soft')}>
+        <div className={cn('rounded-2xl p-4 w-full', isRight ? 'bg-accent/10' : 'bg-white dark:bg-slate-800shadow-soft')}>
           <Skeleton className="h-4 w-full mb-2" />
           <Skeleton className="h-4 w-3/4 mb-3" />
-          <div className="border-t border-gray-100 pt-2">
+          <div className="border-t border-slate-100 dark:border-slate-700 pt-2">
             <Skeleton className="h-3 w-2/3" />
           </div>
         </div>
@@ -158,7 +158,7 @@ export function SkeletonPage() {
   return (
     <div className="page-container">
       {/* Header skeleton */}
-      <div className="bg-gray-200 px-4 pt-14 pb-14">
+      <div className="bg-slate-200 dark:bg-slate-800 px-4 pt-14 pb-14">
         <div className="flex items-center justify-between max-w-lg mx-auto">
           <div className="flex items-center gap-3">
             <Skeleton className="w-12 h-12 rounded-2xl" />
@@ -172,7 +172,7 @@ export function SkeletonPage() {
       </div>
 
       {/* Content skeleton */}
-      <div className="bg-white rounded-t-3xl -mt-6 relative z-10 shadow-strong px-4 pt-6 pb-8">
+      <div className="bg-white dark:bg-slate-800rounded-t-3xl -mt-6 relative z-10 shadow-strong px-4 pt-6 pb-8">
         <div className="max-w-lg mx-auto space-y-6">
           <SkeletonLanguageSelector />
           <div className="py-8">
