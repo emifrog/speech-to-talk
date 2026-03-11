@@ -2,16 +2,11 @@
 // Service Worker - Speech To Talk PWA
 // ===========================================
 
-const CACHE_NAME = 'speech-to-talk-v1';
-const TRANSLATION_CACHE_NAME = 'translations-v1';
+const CACHE_NAME = 'speech-to-talk-v2';
+const TRANSLATION_CACHE_NAME = 'translations-v2';
 
-// Static assets to cache on install
+// Static assets to cache on install (only truly static files, not HTML pages)
 const STATIC_ASSETS = [
-  '/',
-  '/translate',
-  '/conversation',
-  '/scan',
-  '/emergency',
   '/manifest.json',
   '/icons/logo.png',
   '/icons/icon-144x144.png',
@@ -88,6 +83,9 @@ self.addEventListener('fetch', (event) => {
   if (isApiRequest) {
     // Network-first for API requests
     event.respondWith(networkFirst(request));
+  } else if (request.mode === 'navigate') {
+    // Network-first for HTML pages (must go through middleware for auth)
+    event.respondWith(networkFirst(request));
   } else if (request.destination === 'image') {
     // Cache-first for images
     event.respondWith(cacheFirst(request));
@@ -95,7 +93,7 @@ self.addEventListener('fetch', (event) => {
     // Stale-while-revalidate for Next.js assets
     event.respondWith(staleWhileRevalidate(request));
   } else {
-    // Cache-first for navigation requests
+    // Cache-first for other static assets
     event.respondWith(cacheFirst(request));
   }
 });
