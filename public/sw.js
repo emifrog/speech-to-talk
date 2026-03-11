@@ -163,10 +163,11 @@ async function staleWhileRevalidate(request) {
   const cachedResponse = await caches.match(request);
 
   const fetchPromise = fetch(request)
-    .then((networkResponse) => {
+    .then(async (networkResponse) => {
       if (networkResponse.ok) {
-        const cache = caches.open(CACHE_NAME);
-        cache.then((c) => c.put(request, networkResponse.clone()));
+        const responseToCache = networkResponse.clone();
+        const cache = await caches.open(CACHE_NAME);
+        cache.put(request, responseToCache);
       }
       return networkResponse;
     })
