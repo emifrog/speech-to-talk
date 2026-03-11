@@ -10,6 +10,9 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder-key
     steps:
       - uses: actions/checkout@v4
 
@@ -18,7 +21,7 @@ jobs:
           node-version: 20
           cache: npm
 
-      - run: npm ci
+      - run: npm ci --legacy-peer-deps
 
       - run: npm run lint
 
@@ -33,7 +36,7 @@ jobs:
           node-version: 20
           cache: npm
 
-      - run: npm ci
+      - run: npm ci --legacy-peer-deps
 
       - run: npm run type-check
 
@@ -48,7 +51,7 @@ jobs:
           node-version: 20
           cache: npm
 
-      - run: npm ci
+      - run: npm ci --legacy-peer-deps
 
       - run: npm test
 
@@ -68,6 +71,6 @@ jobs:
           node-version: 20
           cache: npm
 
-      - run: npm ci
+      - run: npm ci --legacy-peer-deps
 
       - run: npm run build
