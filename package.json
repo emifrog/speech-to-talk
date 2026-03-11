@@ -1,7 +1,7 @@
 {
   "name": "speech-to-talk",
   "version": "1.0.0",
-  "description": "Application de traduction vocale médicale",
+  "description": "Application de traduction vocale en temps réel",
   "private": true,
   "scripts": {
     "dev": "next dev",
