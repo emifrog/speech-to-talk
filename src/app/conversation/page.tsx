@@ -57,34 +57,35 @@ export default function ConversationPage() {
 
   return (
     <div className="page-container">
-      {/* Header */}
+      {/* Header - compact */}
       <div className="header-gradient safe-area-pt">
-        <div className="flex items-center justify-between max-w-lg mx-auto relative z-10">
-          <div className="flex items-center gap-4">
-            {/* Logo */}
-            <img
-              src="/icons/logo.png"
-              alt="Speech To Talk"
-              className="w-14 h-14 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.1)]"
-            />
-            <div>
-              <h1 className="text-2xl font-bold text-white drop-shadow-lg">
-                Conversation
-              </h1>
-              <p className="text-white/80 text-sm font-medium">Mode bilingue en temps réel</p>
+        <div className="header-gradient-content">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <img
+                src="/icons/logo.png"
+                alt="Speech To Talk"
+                className="w-10 h-10 rounded-xl"
+              />
+              <div>
+                <h1 className="text-lg font-bold text-white">
+                  Conversation
+                </h1>
+                <p className="text-white/70 text-xs">Mode bilingue</p>
+              </div>
             </div>
-          </div>
-          <div className="flex items-center gap-2">
-            {messages.length > 0 && (
-              <button
-                onClick={clearConversation}
-                className="w-8 h-8 bg-white/20 backdrop-blur-xl rounded-xl flex items-center justify-center hover:bg-white/30 transition-colors border border-white/30"
-                aria-label="Effacer la conversation"
-              >
-                <Trash2 className="w-4 h-4 text-white" />
-              </button>
-            )}
-            <SettingsMenu />
+            <div className="flex items-center gap-2">
+              {messages.length > 0 && (
+                <button
+                  onClick={clearConversation}
+                  className="w-10 h-10 bg-white/15 rounded-xl flex items-center justify-center hover:bg-white/25 transition-colors"
+                  aria-label="Effacer la conversation"
+                >
+                  <Trash2 className="w-4 h-4 text-white" />
+                </button>
+              )}
+              <SettingsMenu />
+            </div>
           </div>
         </div>
       </div>
@@ -92,7 +93,7 @@ export default function ConversationPage() {
       {/* Content */}
       <div className="content-area flex flex-col min-h-[calc(100vh-180px)]">
         {/* Participants info */}
-        <div className="flex justify-between items-center px-4 py-3 bg-white/50 dark:bg-dark-light/50 backdrop-blur-sm border-b border-slate-200/50 dark:border-slate-700/50 rounded-t-2xl -mt-4">
+        <div className="flex justify-between items-center px-4 py-3 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 rounded-t-2xl -mt-4">
           <div className="flex items-center gap-2">
             <button
               onClick={() => setCurrentParticipant('A')}

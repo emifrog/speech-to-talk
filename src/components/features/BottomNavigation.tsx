@@ -105,12 +105,12 @@ export function BottomNavigation() {
       aria-label="Navigation principale"
       role="navigation"
     >
-      {/* Background with blur */}
-      <div className="absolute inset-0 bg-white/90 dark:bg-dark/90 backdrop-blur-xl border-t border-slate-200/50 dark:border-slate-700/50" />
+      {/* Background with blur and strong shadow */}
+      <div className="absolute inset-0 bg-white/95 dark:bg-dark/95 backdrop-blur-xl border-t border-slate-200/60 dark:border-slate-700/60 shadow-[0_-4px_24px_rgba(0,0,0,0.08)] dark:shadow-[0_-4px_24px_rgba(0,0,0,0.3)]" />
 
       {/* Navigation content */}
       <div className="relative max-w-lg mx-auto px-2">
-        <div className="flex justify-around items-end py-1" role="menubar">
+        <div className="flex justify-around items-end py-2" role="menubar">
           {navItems.map((item, index) => {
             const isActive = pathname === item.href ||
               (item.href === '/translate' && pathname === '/');
@@ -127,35 +127,46 @@ export function BottomNavigation() {
                 tabIndex={isActive ? 0 : -1}
                 className={cn(
                   'flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all duration-200 active:scale-95',
-                  'min-w-[60px]',
+                  'min-w-[64px]',
                   focusVisibleClasses,
                   isActive
                     ? item.isEmergency
                       ? 'text-accent'
                       : 'text-primary'
-                    : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400'
+                    : item.isEmergency
+                      ? 'text-slate-400 dark:text-slate-500 hover:text-accent/70 dark:hover:text-accent/70'
+                      : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400'
                 )}
               >
                 {/* Icon container */}
                 <div className={cn(
-                  'relative flex items-center justify-center w-9 h-9 rounded-xl transition-all duration-200',
-                  isActive && !item.isEmergency && 'bg-primary/10 dark:bg-primary/20',
-                  isActive && item.isEmergency && 'bg-accent/10 dark:bg-accent/20'
+                  'relative flex items-center justify-center w-10 h-10 rounded-2xl transition-all duration-200',
+                  // Active states: filled container
+                  isActive && !item.isEmergency && 'bg-primary text-white shadow-md shadow-primary/25',
+                  isActive && item.isEmergency && 'bg-accent text-white shadow-md shadow-accent/25',
+                  // Inactive hover
+                  !isActive && !item.isEmergency && 'hover:bg-slate-100 dark:hover:bg-slate-800',
+                  !isActive && item.isEmergency && 'hover:bg-accent/10 dark:hover:bg-accent/10'
                 )}>
                   <Icon
                     className={cn(
-                      'w-5 h-5 transition-all duration-200',
-                      isActive ? 'scale-110' : 'scale-100'
+                      'w-6 h-6 transition-all duration-200',
+                      isActive ? 'scale-110' : 'scale-100',
+                      // Emergency icon always tinted when inactive
+                      !isActive && item.isEmergency && 'text-accent/60'
                     )}
                     strokeWidth={isActive ? 2.5 : 2}
                   />
+
                 </div>
 
                 {/* Label */}
                 <span
                   className={cn(
-                    'text-[10px] mt-0.5 transition-all duration-200',
-                    isActive ? 'font-bold' : 'font-medium'
+                    'text-[11px] mt-1 transition-all duration-200',
+                    isActive ? 'font-bold' : 'font-medium',
+                    // Emergency label always subtly colored when inactive
+                    !isActive && item.isEmergency && 'text-accent/50'
                   )}
                 >
                   {item.label}

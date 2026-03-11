@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { useTheme } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
 import { lightHaptic } from '@/lib/haptics';
@@ -17,7 +18,9 @@ interface SettingsMenuProps {
 
 export function SettingsMenu({ className }: SettingsMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const { resolvedTheme, toggleTheme } = useTheme();
 
   const handleToggleTheme = () => {
@@ -36,6 +39,11 @@ export function SettingsMenu({ className }: SettingsMenuProps) {
     setIsOpen(false);
   };
 
+  // Ensure portal only renders on client
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Close on Escape key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -53,10 +61,14 @@ export function SettingsMenu({ className }: SettingsMenuProps) {
     };
   }, [isOpen]);
 
-  // Close on click outside
+  // Close on click outside (check both button and portal menu)
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      if (
+        buttonRef.current && !buttonRef.current.contains(target) &&
+        menuRef.current && !menuRef.current.contains(target)
+      ) {
         setIsOpen(false);
       }
     };
@@ -71,40 +83,44 @@ export function SettingsMenu({ className }: SettingsMenuProps) {
   }, [isOpen]);
 
   return (
-    <div className={cn('relative z-50', className)} ref={menuRef}>
-      {/* Menu button - 44px for firefighter accessibility */}
-      <button
-        onClick={handleOpenMenu}
-        className={cn(
-          'w-11 h-11 rounded-xl flex items-center justify-center',
-          'bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm',
-          'border border-white/50 dark:border-slate-600',
-          'shadow-soft',
-          'transition-all duration-300',
-          'hover:scale-105 hover:bg-white dark:hover:bg-slate-700 active:scale-95',
-          'focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-primary'
-        )}
-        aria-label="Ouvrir le menu"
-        aria-expanded={isOpen}
-        aria-haspopup="true"
-      >
-        <Menu className="w-5 h-5 text-primary-600 dark:text-white" strokeWidth={2.5} />
-      </button>
+    <>
+      <div className={cn('relative', className)}>
+        {/* Menu button - 44px for firefighter accessibility */}
+        <button
+          ref={buttonRef}
+          onClick={handleOpenMenu}
+          className={cn(
+            'w-11 h-11 rounded-xl flex items-center justify-center',
+            'bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm',
+            'border border-white/50 dark:border-slate-600',
+            'shadow-soft',
+            'transition-all duration-300',
+            'hover:scale-105 hover:bg-white dark:hover:bg-slate-700 active:scale-95',
+            'focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-primary'
+          )}
+          aria-label="Ouvrir le menu"
+          aria-expanded={isOpen}
+          aria-haspopup="true"
+        >
+          <Menu className="w-5 h-5 text-primary-600 dark:text-white" strokeWidth={2.5} />
+        </button>
+      </div>
 
-      {/* Dropdown menu */}
-      {isOpen && (
+      {/* Portal-rendered dropdown menu (escapes header overflow-hidden) */}
+      {isOpen && mounted && createPortal(
         <>
           {/* Overlay */}
           <div
-            className="fixed inset-0 bg-black/20 dark:bg-black/40 backdrop-blur-sm z-40 animate-fade-in"
+            className="fixed inset-0 bg-black/20 dark:bg-black/40 backdrop-blur-sm z-[9998] animate-fade-in"
             onClick={handleCloseMenu}
             aria-hidden="true"
           />
 
           {/* Menu panel */}
           <div
+            ref={menuRef}
             className={cn(
-              'fixed right-4 top-16 z-[100]',
+              'fixed right-4 top-16 z-[9999]',
               'w-72 p-2',
               'bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl',
               'border border-slate-200/50 dark:border-slate-700/50',
@@ -206,8 +222,9 @@ export function SettingsMenu({ className }: SettingsMenuProps) {
               </div>
             </Link>
           </div>
-        </>
+        </>,
+        document.body
       )}
-    </div>
+    </>
   );
 }

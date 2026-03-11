@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* ===========================================
-   Speech To Talk - Modern Glassmorphism Design
+   Speech To Talk - Clean Professional Design
    =========================================== */
 
 @layer base {
@@ -15,7 +15,15 @@
     --color-text: 15 23 42; /* slate-900 */
     --color-text-muted: 100 116 139; /* slate-500 */
 
-    /* Glassmorphism variables */
+    /* Surface & shadow tokens */
+    --surface-primary: #ffffff;
+    --surface-secondary: #f8fafc;
+    --surface-border: rgba(226, 232, 240, 0.8);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.04);
+
+    /* Glass - reserved for overlays & nav only */
     --glass-bg: rgba(255, 255, 255, 0.7);
     --glass-border: rgba(255, 255, 255, 0.5);
     --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
@@ -29,7 +37,15 @@
     --color-text: 248 250 252; /* slate-50 */
     --color-text-muted: 148 163 184; /* slate-400 */
 
-    /* Dark glassmorphism */
+    /* Dark surface & shadow tokens */
+    --surface-primary: #1a1a2e;
+    --surface-secondary: #0f0f23;
+    --surface-border: rgba(255, 255, 255, 0.08);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.25), 0 1px 2px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.3), 0 1px 4px rgba(0, 0, 0, 0.2);
+
+    /* Dark glass - for overlays & nav only */
     --glass-bg: rgba(26, 26, 46, 0.8);
     --glass-border: rgba(255, 255, 255, 0.1);
     --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
@@ -93,17 +109,17 @@
 
   .page-container {
     @apply min-h-screen pb-28;
-    background: linear-gradient(135deg, #f8fafc 0%, #dbeafe 50%, #fee2e2 100%);
+    background: var(--surface-secondary);
   }
 
   .dark .page-container {
-    background: linear-gradient(135deg, #0f0f23 0%, #1e3a5f 50%, #1a1a2e 100%);
+    background: var(--surface-secondary);
   }
 
-  /* Modern gradient header with blur */
+  /* Compact gradient header */
   .header-gradient {
     @apply relative overflow-hidden;
-    @apply px-6 pb-20;
+    @apply px-6 pb-12;
     padding-top: 1.2rem;
     background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 50%, #1e40af 100%);
   }
@@ -111,17 +127,21 @@
   .header-gradient::before {
     content: '';
     @apply absolute inset-0;
-    background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.2) 0%, transparent 50%);
+    background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.15) 0%, transparent 50%);
   }
 
   .header-gradient::after {
     content: '';
-    @apply absolute -bottom-1 left-0 right-0 h-12;
-    background: linear-gradient(to top, var(--glass-bg), transparent);
+    @apply absolute -bottom-1 left-0 right-0 h-8;
+    background: linear-gradient(to top, var(--surface-secondary), transparent);
   }
 
   .dark .header-gradient {
     background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #1d4ed8 100%);
+  }
+
+  .dark .header-gradient::after {
+    background: linear-gradient(to top, var(--surface-secondary), transparent);
   }
 
   .header-gradient-content {
@@ -131,7 +151,7 @@
   /* Emergency header variant */
   .header-gradient-emergency {
     @apply relative overflow-hidden;
-    @apply px-6 pb-20;
+    @apply px-6 pb-12;
     padding-top: 1.2rem;
     background: linear-gradient(135deg, #dc2626 0%, #b91c1c 50%, #991b1b 100%);
   }
@@ -139,24 +159,22 @@
   .header-gradient-emergency::before {
     content: '';
     @apply absolute inset-0;
-    background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.2) 0%, transparent 50%);
+    background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.15) 0%, transparent 50%);
   }
 
   .header-gradient-emergency::after {
     content: '';
-    @apply absolute -bottom-1 left-0 right-0 h-12;
-    background: linear-gradient(to top, var(--glass-bg), transparent);
+    @apply absolute -bottom-1 left-0 right-0 h-8;
+    background: linear-gradient(to top, var(--surface-secondary), transparent);
   }
 
-  /* Glassmorphism content area */
+  /* Solid content area (no glassmorphism) */
   .content-area {
-    @apply rounded-t-[2.5rem] -mt-8 relative z-10;
+    @apply rounded-t-[2.5rem] -mt-6 relative z-10;
     @apply px-5 sm:px-6 pt-8 pb-8;
-    background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-top: 1px solid var(--glass-border);
-    box-shadow: var(--glass-shadow);
+    background: var(--surface-primary);
+    border-top: 1px solid var(--surface-border);
+    box-shadow: var(--shadow-md);
   }
 
   .content-area-inner {
@@ -164,25 +182,22 @@
   }
 
   /* =========================================
-     Glass Card Components
+     Card Components (solid surfaces)
      ========================================= */
 
   .glass-card {
-    @apply rounded-3xl p-5 transition-all duration-300;
-    background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--glass-shadow);
+    @apply rounded-2xl p-5 transition-shadow duration-200;
+    background: var(--surface-primary);
+    border: 1px solid var(--surface-border);
+    box-shadow: var(--shadow-sm);
   }
 
   .glass-card:hover {
-    @apply scale-[1.02];
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+    box-shadow: var(--shadow-md);
   }
 
   .dark .glass-card:hover {
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-md);
   }
 
   .glass-card-interactive {
@@ -192,15 +207,13 @@
 
   /* Card with gradient border */
   .glass-card-gradient {
-    @apply rounded-3xl p-5 relative;
-    background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    @apply rounded-2xl p-5 relative;
+    background: var(--surface-primary);
   }
 
   .glass-card-gradient::before {
     content: '';
-    @apply absolute inset-0 rounded-3xl -z-10;
+    @apply absolute inset-0 rounded-2xl -z-10;
     padding: 1px;
     background: linear-gradient(135deg, rgba(37, 99, 235, 0.5), rgba(220, 38, 38, 0.5));
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -249,7 +262,7 @@
      ========================================= */
 
   .btn {
-    @apply px-5 py-2.5 rounded-2xl font-semibold transition-all duration-300;
+    @apply px-5 py-2.5 rounded-xl font-semibold transition-all duration-200;
     @apply active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2;
     @apply dark:focus:ring-offset-dark;
   }
@@ -257,27 +270,27 @@
   .btn-primary {
     @apply btn text-white;
     background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4);
+    box-shadow: var(--shadow-md);
     @apply focus:ring-primary-400;
   }
 
   .btn-primary:hover {
     background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
-    box-shadow: 0 6px 30px rgba(37, 99, 235, 0.5);
-    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-1px);
   }
 
   .btn-accent {
     @apply btn text-white;
     background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-    box-shadow: 0 4px 20px rgba(220, 38, 38, 0.4);
+    box-shadow: var(--shadow-md);
     @apply focus:ring-accent-400;
   }
 
   .btn-accent:hover {
     background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
-    box-shadow: 0 6px 30px rgba(220, 38, 38, 0.5);
-    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-1px);
   }
 
   .btn-glass {
@@ -292,7 +305,7 @@
 
   .btn-glass:hover {
     background: rgba(255, 255, 255, 0.9);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-md);
   }
 
   .dark .btn-glass:hover {
@@ -311,18 +324,16 @@
      ========================================= */
 
   .input {
-    @apply w-full px-5 py-3.5 rounded-2xl transition-all duration-300;
+    @apply w-full px-5 py-3.5 rounded-xl transition-all duration-200;
     @apply text-slate-900 placeholder-slate-400;
     @apply dark:text-white dark:placeholder-slate-500;
-    background: var(--glass-bg);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid var(--glass-border);
+    background: var(--surface-primary);
+    border: 1px solid var(--surface-border);
     @apply focus:outline-none focus:ring-2 focus:ring-primary-400 focus:border-transparent;
   }
 
   .input:focus {
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.08);
   }
 
   /* =========================================
@@ -374,7 +385,7 @@
     background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
   }
 
-  /* Glass effect utility */
+  /* Glass effect utility - reserved for overlays & nav */
   .glass {
     background: var(--glass-bg);
     backdrop-filter: blur(20px);

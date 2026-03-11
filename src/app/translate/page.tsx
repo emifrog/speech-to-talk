@@ -31,58 +31,57 @@ export default function TranslatePage() {
 
   return (
     <div className="page-container">
-      {/* Header */}
+      {/* Header - compact */}
       <div className="header-gradient safe-area-pt">
-        <div className="flex items-center justify-between max-w-lg mx-auto relative z-10">
-          <div className="flex items-center gap-4">
-            {/* Logo */}
-            <img
-              src="/icons/logo.png"
-              alt="Speech To Talk"
-              className="w-14 h-14 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.1)]"
-            />
-            <div>
-              <h1 className="text-2xl font-bold text-white drop-shadow-lg">
-                Speech To Talk
-              </h1>
-              <p className="text-white/80 text-sm font-medium">Traduction vocale intelligente</p>
+        <div className="header-gradient-content">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <img
+                src="/icons/logo.png"
+                alt="Speech To Talk"
+                className="w-10 h-10 rounded-xl"
+              />
+              <div>
+                <h1 className="text-lg font-bold text-white">
+                  Speech To Talk
+                </h1>
+                <p className="text-white/70 text-xs">Traduction vocale</p>
+              </div>
             </div>
-          </div>
-          <div className="flex items-center gap-2">
             <SettingsMenu />
           </div>
         </div>
       </div>
 
       {/* Content */}
-      <div className="content-area min-h-[calc(100vh-200px)]">
-        <div className="max-w-lg mx-auto">
+      <div className="content-area">
+        <div className="content-area-inner">
           {/* Language Selector */}
-          <div className="animate-fade-in mb-8">
+          <div className="animate-fade-in mb-6">
             <LanguageSelector />
           </div>
 
-          {/* Permission request - affiché si permission refusée OU jamais demandée */}
+          {/* Permission request */}
           {hasPermission !== true && (
-            <div className="mt-4 mb-8 glass-card-gradient p-6 text-center animate-slide-up">
-              <div className="w-16 h-16 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-[0_4px_20px_rgba(251,191,36,0.4)]">
-                <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="mb-6 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 rounded-2xl p-5 text-center animate-slide-up">
+              <div className="w-12 h-12 bg-amber-100 dark:bg-amber-900/30 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <svg className="w-6 h-6 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
                 </svg>
               </div>
-              <p className="text-slate-800 dark:text-white mb-2 font-semibold text-lg">
+              <p className="text-slate-900 dark:text-white mb-1 font-semibold">
                 {hasPermission === false ? 'Microphone non autorisé' : 'Accès au microphone requis'}
               </p>
-              <p className="text-slate-600 dark:text-slate-300 mb-5 text-sm">
+              <p className="text-slate-600 dark:text-slate-400 mb-4 text-sm">
                 {hasPermission === false
-                  ? 'Veuillez autoriser l\'accès au microphone dans les paramètres de votre navigateur, puis réessayez.'
-                  : 'Pour utiliser la traduction vocale, autorisez l\'accès au microphone.'
+                  ? 'Autorisez l\'accès dans les paramètres du navigateur.'
+                  : 'Pour utiliser la traduction vocale.'
                 }
               </p>
               <button
                 onClick={handleRequestPermission}
                 disabled={isRequestingPermission}
-                className="w-full px-6 py-4 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-2xl font-semibold shadow-[0_4px_20px_rgba(251,191,36,0.4)] hover:shadow-[0_6px_30px_rgba(251,191,36,0.5)] transition-all duration-300 active:scale-95 touch-manipulation hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed"
+                className="w-full px-5 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-semibold transition-colors duration-200 active:scale-95 disabled:opacity-70"
               >
                 {isRequestingPermission ? (
                   <span className="flex items-center justify-center gap-2">
@@ -92,17 +91,13 @@ export default function TranslatePage() {
                     </svg>
                     Demande en cours...
                   </span>
-                ) : hasPermission === false ? (
-                  'Réessayer'
-                ) : (
-                  'Autoriser le microphone'
-                )}
+                ) : hasPermission === false ? 'Réessayer' : 'Autoriser le microphone'}
               </button>
             </div>
           )}
 
           {/* Microphone Button */}
-          <div className="flex flex-col items-center my-12">
+          <div className="flex flex-col items-center my-10">
             <MicrophoneButton
               audioState={audioState}
               duration={duration}
@@ -114,16 +109,16 @@ export default function TranslatePage() {
 
           {/* Error message */}
           {error && (
-            <div className="mb-8 glass-card p-5 border-l-4 border-accent animate-slide-up">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-accent-500 to-accent-700 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-[0_4px_16px_rgba(220,38,38,0.3)]">
-                  <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="mb-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-xl p-4 animate-slide-up">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <svg className="w-4 h-4 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </div>
-                <div className="flex-1 pt-1">
-                  <p className="text-accent font-semibold text-base mb-1">Erreur</p>
-                  <p className="text-slate-600 dark:text-slate-300 text-sm">{error}</p>
+                <div className="flex-1">
+                  <p className="text-red-800 dark:text-red-300 font-medium text-sm">Erreur</p>
+                  <p className="text-red-600 dark:text-red-400 text-sm mt-0.5">{error}</p>
                 </div>
               </div>
             </div>
