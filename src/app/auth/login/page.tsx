@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui';
@@ -9,11 +9,14 @@ import { Mail, Lock, Eye, EyeOff, AlertCircle } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { login, isLoading, error, clearError } = useAuthContext();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+
+  const redirectTo = searchParams.get('redirect') || '/translate';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,7 +24,7 @@ export default function LoginPage() {
 
     const success = await login(email, password);
     if (success) {
-      router.push('/translate');
+      router.push(redirectTo);
     }
   };
 
@@ -129,26 +132,6 @@ export default function LoginPage() {
             </Link>
           </p>
 
-          {/* Divider */}
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-slate-200 dark:border-slate-700" />
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-slate-50 dark:bg-dark text-slate-500 dark:text-slate-400">ou</span>
-            </div>
-          </div>
-
-          <Link href="/translate">
-            <Button
-              type="button"
-              variant="ghost"
-              size="lg"
-              className="w-full"
-            >
-              Continuer sans compte
-            </Button>
-          </Link>
         </form>
       </div>
     </div>
