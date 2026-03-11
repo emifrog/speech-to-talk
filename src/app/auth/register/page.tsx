@@ -37,7 +37,7 @@ export default function RegisterPage() {
     if (result) {
       setSuccess(true);
       setTimeout(() => {
-        router.push('/translate');
+        window.location.href = '/translate';
       }, 2000);
     }
   };

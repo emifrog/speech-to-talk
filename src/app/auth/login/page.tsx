@@ -24,7 +24,7 @@ function LoginForm() {
 
     const success = await login(email, password);
     if (success) {
-      router.push(redirectTo);
+      window.location.href = redirectTo;
     }
   };
 
