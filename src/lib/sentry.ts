@@ -6,12 +6,11 @@
 type SeverityLevel = 'fatal' | 'error' | 'warning' | 'log' | 'info' | 'debug';
 
 // Dynamic import to prevent build errors when Sentry is not installed
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line
 let Sentry: any = null;
 
 if (typeof window !== 'undefined' || typeof process !== 'undefined') {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
     Sentry = require('@sentry/nextjs');
   } catch {
     // Sentry not installed, all functions will be no-ops
