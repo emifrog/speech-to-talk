@@ -57,8 +57,7 @@ serve(async (req) => {
             sampleRateHertz: 48000,
             languageCode: googleLanguageCode,
             enableAutomaticPunctuation,
-            model: 'latest_long',
-            useEnhanced: true,
+            model: 'default',
           },
           audio: {
             content: audioContent,
