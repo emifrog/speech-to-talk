@@ -3,12 +3,13 @@
 import { useRef, useEffect } from 'react';
 import { BottomNavigation, SettingsMenu } from '@/components/features';
 import { useConversation, useLanguages } from '@/lib/store';
-import { useConversationFlow } from '@/hooks';
+import { useConversationFlow, useRequireAuth } from '@/hooks';
 import { getLanguageByCode } from '@/lib/constants';
 import { cn, formatDuration } from '@/lib/utils';
 import { Mic, Square, Loader2, Volume2, Trash2, ArrowLeftRight } from 'lucide-react';
 
 export default function ConversationPage() {
+  useRequireAuth();
   const { messages } = useConversation();
   const { sourceLang, targetLang, swapLanguages } = useLanguages();
   const messagesEndRef = useRef<HTMLDivElement>(null);

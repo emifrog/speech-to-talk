@@ -5,10 +5,12 @@ import { BottomNavigation, EmergencyPhraseCard, SettingsMenu } from '@/component
 import { useToast } from '@/components/ui';
 import { EMERGENCY_CATEGORIES, EMERGENCY_PHRASES } from '@/lib/constants';
 import { useLanguages } from '@/lib/store';
+import { useRequireAuth } from '@/hooks';
 import { cn } from '@/lib/utils';
 import type { EmergencyCategory } from '@/types';
 
 export default function EmergencyPage() {
+  useRequireAuth();
   const [selectedCategory, setSelectedCategory] = useState<EmergencyCategory>('medical');
   const [playingId, setPlayingId] = useState<string | null>(null);
   const { sourceLang, targetLang } = useLanguages();

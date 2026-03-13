@@ -6,6 +6,7 @@ import { BottomNavigation, SettingsMenu } from '@/components/features';
 import { useToast } from '@/components/ui';
 import { Camera, Upload, Volume2, Copy, RefreshCw, AlertCircle, Check, X, Loader2 } from 'lucide-react';
 import { useLanguages } from '@/lib/store';
+import { useRequireAuth } from '@/hooks';
 import { SUPPORTED_LANGUAGES, getLanguageByCode } from '@/lib/constants';
 import type { LanguageCode, OCRResult } from '@/types';
 
@@ -32,6 +33,7 @@ interface ScanResult {
 }
 
 export default function ScanPage() {
+  useRequireAuth();
   const { sourceLang, targetLang, setSourceLang, setTargetLang } = useLanguages();
   const toast = useToast();
 

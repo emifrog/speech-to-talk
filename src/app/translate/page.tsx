@@ -2,10 +2,19 @@
 
 import { useState } from 'react';
 import { BottomNavigation, LanguageSelector, MicrophoneButton, TranslationResult, SettingsMenu } from '@/components/features';
-import { useTranslationFlow } from '@/hooks';
+import { useTranslationFlow, useRequireAuth } from '@/hooks';
 
 export default function TranslatePage() {
+  const { isLoading } = useRequireAuth();
   const [isRequestingPermission, setIsRequestingPermission] = useState(false);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+      </div>
+    );
+  }
 
   const {
     audioState,
