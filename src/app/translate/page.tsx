@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { BottomNavigation, LanguageSelector, MicrophoneButton, TranslationResult, SettingsMenu } from '@/components/features';
+import { SkeletonLanguageSelector, SkeletonMicrophoneButton } from '@/components/ui';
 import { useTranslationFlow, useRequireAuth } from '@/hooks';
 
 export default function TranslatePage() {
@@ -22,8 +23,18 @@ export default function TranslatePage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+      <div className="page-container">
+        <div className="header-gradient safe-area-pt">
+          <div className="header-gradient-content h-16" />
+        </div>
+        <div className="content-area">
+          <div className="content-area-inner space-y-6">
+            <SkeletonLanguageSelector />
+            <div className="flex flex-col items-center my-10">
+              <SkeletonMicrophoneButton />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 import { BottomNavigation, EmergencyPhraseCard, SettingsMenu } from '@/components/features';
-import { useToast } from '@/components/ui';
-import { EMERGENCY_CATEGORIES, EMERGENCY_PHRASES } from '@/lib/constants';
+import { SkeletonEmergencyCard, useToast } from '@/components/ui';
+import { EMERGENCY_CATEGORIES } from '@/lib/constants';
 import { useLanguages } from '@/lib/store';
-import { useRequireAuth } from '@/hooks';
+import { useRequireAuth, useEmergencyPhrases } from '@/hooks';
 import { cn } from '@/lib/utils';
 import type { EmergencyCategory } from '@/types';
 
@@ -15,8 +15,9 @@ export default function EmergencyPage() {
   const [playingId, setPlayingId] = useState<string | null>(null);
   const { sourceLang, targetLang } = useLanguages();
   const toast = useToast();
+  const { phrases, isLoading } = useEmergencyPhrases();
 
-  const filteredPhrases = EMERGENCY_PHRASES
+  const filteredPhrases = phrases
     .filter((phrase) => phrase.category === selectedCategory)
     .sort((a, b) => a.displayOrder - b.displayOrder);
 
@@ -89,26 +90,32 @@ export default function EmergencyPage() {
 
           {/* Emergency phrases */}
           <div className="space-y-2">
-            {filteredPhrases.map((phrase) => (
-              <EmergencyPhraseCard
-                key={phrase.id}
-                phrase={{
-                  id: phrase.id,
-                  category: phrase.category,
-                  translations: phrase.translations,
-                  severity: phrase.severity,
-                  displayOrder: phrase.displayOrder,
-                }}
-                sourceLang={sourceLang}
-                targetLang={targetLang}
-                onPlay={() => handlePlay(phrase.id, phrase.translations[targetLang])}
-                isPlaying={playingId === phrase.id}
-              />
-            ))}
+            {isLoading ? (
+              Array.from({ length: 4 }).map((_, i) => (
+                <SkeletonEmergencyCard key={i} />
+              ))
+            ) : (
+              filteredPhrases.map((phrase) => (
+                <EmergencyPhraseCard
+                  key={phrase.id}
+                  phrase={{
+                    id: phrase.id,
+                    category: phrase.category,
+                    translations: phrase.translations,
+                    severity: phrase.severity,
+                    displayOrder: phrase.displayOrder,
+                  }}
+                  sourceLang={sourceLang}
+                  targetLang={targetLang}
+                  onPlay={() => handlePlay(phrase.id, phrase.translations[targetLang])}
+                  isPlaying={playingId === phrase.id}
+                />
+              ))
+            )}
           </div>
 
           {/* Empty state */}
-          {filteredPhrases.length === 0 && (
+          {!isLoading && filteredPhrases.length === 0 && (
             <div className="text-center py-16 animate-fade-in">
               <div className="w-14 h-14 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center mx-auto mb-3">
                 <svg className="w-7 h-7 text-slate-400 dark:text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
