@@ -182,8 +182,19 @@ export function useAudioRecorder(
     return new Promise((resolve) => {
       const mediaRecorder = mediaRecorderRef.current;
 
-      if (!mediaRecorder || mediaRecorder.state === 'inactive') {
+      if (!mediaRecorder) {
         resolve(null);
+        return;
+      }
+
+      // Si déjà arrêté, construire le blob avec les chunks existants
+      if (mediaRecorder.state === 'inactive') {
+        const blob = new Blob(chunksRef.current, { type: mediaRecorder.mimeType });
+        const finalDuration = Date.now() - startTimeRef.current;
+        cleanupStream();
+        cleanupTimer();
+        setIsRecording(false);
+        resolve(blob.size > 0 ? { blob, duration: finalDuration, mimeType: mediaRecorder.mimeType } : null);
         return;
       }
 
@@ -203,6 +214,10 @@ export function useAudioRecorder(
         });
       };
 
+      // Force flush du dernier chunk avant arrêt
+      if (mediaRecorder.state === 'recording') {
+        mediaRecorder.requestData();
+      }
       mediaRecorder.stop();
     });
   }, [cleanupStream, cleanupTimer]);
