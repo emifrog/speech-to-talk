@@ -55,15 +55,14 @@ describe('LanguageSelector', () => {
   });
 
   it('calls setSourceLang when selecting a new source language', async () => {
-    const user = userEvent.setup();
     render(<LanguageSelector />);
 
     const sourceButton = screen.getByRole('button', { name: /langue source/i });
-    await user.click(sourceButton);
+    fireEvent.click(sourceButton);
 
-    // Find and click German option
+    // Find and click German option using fireEvent to avoid mousedown closing the dropdown
     const germanOption = screen.getByRole('option', { name: /deutsch/i });
-    await user.click(germanOption);
+    fireEvent.click(germanOption);
 
     expect(defaultMock.setSourceLang).toHaveBeenCalledWith('de');
   });

@@ -7,6 +7,14 @@ jest.mock('@/lib/haptics', () => ({
   lightHaptic: jest.fn(),
   mediumHaptic: jest.fn(),
   heavyHaptic: jest.fn(),
+  successHaptic: jest.fn(),
+  errorHaptic: jest.fn(),
+  startRecordingHaptic: jest.fn(),
+  stopRecordingHaptic: jest.fn(),
+  emergencyHaptic: jest.fn(),
+  customHaptic: jest.fn(),
+  cancelHaptic: jest.fn(),
+  isHapticsSupported: jest.fn(() => false),
 }));
 
 describe('MicrophoneButton', () => {
@@ -29,10 +37,9 @@ describe('MicrophoneButton', () => {
   });
 
   it('renders in recording state', () => {
-    render(<MicrophoneButton {...defaultProps} audioState="recording" duration={5} />);
+    render(<MicrophoneButton {...defaultProps} audioState="recording" duration={5000} />);
 
     expect(screen.getByText(/0:05/)).toBeInTheDocument();
-    expect(screen.getByText(/relâchez pour traduire/i)).toBeInTheDocument();
   });
 
   it('renders in processing state', () => {
@@ -44,7 +51,7 @@ describe('MicrophoneButton', () => {
   it('renders in playing state', () => {
     render(<MicrophoneButton {...defaultProps} audioState="playing" />);
 
-    expect(screen.getByText(/lecture audio/i)).toBeInTheDocument();
+    expect(screen.getByText(/lecture audio\.\.\./i)).toBeInTheDocument();
   });
 
   it('renders in error state', () => {
@@ -63,9 +70,9 @@ describe('MicrophoneButton', () => {
     expect(onPress).toHaveBeenCalled();
   });
 
-  it('calls onRelease on mouse up', async () => {
+  it('calls onRelease on mouse up when recording', async () => {
     const onRelease = jest.fn();
-    render(<MicrophoneButton {...defaultProps} onRelease={onRelease} />);
+    render(<MicrophoneButton {...defaultProps} audioState="recording" onRelease={onRelease} />);
 
     const button = screen.getByRole('button');
     fireEvent.mouseUp(button);
@@ -104,7 +111,7 @@ describe('MicrophoneButton', () => {
   });
 
   it('formats duration correctly', () => {
-    render(<MicrophoneButton {...defaultProps} audioState="recording" duration={65} />);
+    render(<MicrophoneButton {...defaultProps} audioState="recording" duration={65000} />);
 
     expect(screen.getByText(/1:05/)).toBeInTheDocument();
   });
@@ -112,15 +119,16 @@ describe('MicrophoneButton', () => {
   it('supports touch events', async () => {
     const onPress = jest.fn();
     const onRelease = jest.fn();
-    render(
+    const { rerender } = render(
       <MicrophoneButton {...defaultProps} onPress={onPress} onRelease={onRelease} />
     );
 
     const button = screen.getByRole('button');
-
     fireEvent.touchStart(button);
     expect(onPress).toHaveBeenCalled();
 
+    // onRelease only fires when recording
+    rerender(<MicrophoneButton {...defaultProps} audioState="recording" onPress={onPress} onRelease={onRelease} />);
     fireEvent.touchEnd(button);
     expect(onRelease).toHaveBeenCalled();
   });

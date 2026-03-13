@@ -20,7 +20,14 @@ describe('useTranslationFlow logic', () => {
         return transitions[state]?.includes(to) ?? false;
       },
       transition: (to: AudioState): boolean => {
-        if (createAudioStateMachine().canTransition.call({ state }, to)) {
+        const transitions: Record<AudioState, AudioState[]> = {
+          idle: ['recording', 'error'],
+          recording: ['processing', 'idle', 'error'],
+          processing: ['playing', 'idle', 'error'],
+          playing: ['idle', 'error'],
+          error: ['idle'],
+        };
+        if (transitions[state]?.includes(to)) {
           state = to;
           return true;
         }

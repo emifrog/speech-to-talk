@@ -28,62 +28,50 @@ describe('BottomNavigation', () => {
   it('renders correct links', () => {
     render(<BottomNavigation />);
 
-    expect(screen.getByRole('link', { name: /traduire/i })).toHaveAttribute(
-      'href',
-      '/translate'
-    );
-    expect(screen.getByRole('link', { name: /conversation/i })).toHaveAttribute(
-      'href',
-      '/conversation'
-    );
-    expect(screen.getByRole('link', { name: /scanner/i })).toHaveAttribute(
-      'href',
-      '/scan'
-    );
-    expect(screen.getByRole('link', { name: /urgence/i })).toHaveAttribute(
-      'href',
-      '/emergency'
-    );
+    expect(screen.getByRole('menuitem', { name: /traduire/i })).toHaveAttribute('href', '/translate');
+    expect(screen.getByRole('menuitem', { name: /conversation/i })).toHaveAttribute('href', '/conversation');
+    expect(screen.getByRole('menuitem', { name: /scanner/i })).toHaveAttribute('href', '/scan');
+    expect(screen.getByRole('menuitem', { name: /urgence/i })).toHaveAttribute('href', '/emergency');
   });
 
   it('highlights active translate link', () => {
     mockUsePathname.mockReturnValue('/translate');
     render(<BottomNavigation />);
 
-    const translateLink = screen.getByRole('link', { name: /traduire/i });
-    expect(translateLink).toHaveClass('text-primary');
+    const translateLink = screen.getByRole('menuitem', { name: /traduire/i });
+    expect(translateLink).toHaveAttribute('aria-current', 'page');
   });
 
   it('highlights active conversation link', () => {
     mockUsePathname.mockReturnValue('/conversation');
     render(<BottomNavigation />);
 
-    const conversationLink = screen.getByRole('link', { name: /conversation/i });
-    expect(conversationLink).toHaveClass('text-primary');
+    const conversationLink = screen.getByRole('menuitem', { name: /conversation/i });
+    expect(conversationLink).toHaveAttribute('aria-current', 'page');
   });
 
   it('highlights active scan link', () => {
     mockUsePathname.mockReturnValue('/scan');
     render(<BottomNavigation />);
 
-    const scanLink = screen.getByRole('link', { name: /scanner/i });
-    expect(scanLink).toHaveClass('text-primary');
+    const scanLink = screen.getByRole('menuitem', { name: /scanner/i });
+    expect(scanLink).toHaveAttribute('aria-current', 'page');
   });
 
   it('highlights emergency link with accent color', () => {
     mockUsePathname.mockReturnValue('/emergency');
     render(<BottomNavigation />);
 
-    const emergencyLink = screen.getByRole('link', { name: /urgence/i });
-    expect(emergencyLink).toHaveClass('text-accent');
+    const emergencyLink = screen.getByRole('menuitem', { name: /urgence/i });
+    expect(emergencyLink).toHaveAttribute('aria-current', 'page');
   });
 
   it('treats root path as translate', () => {
     mockUsePathname.mockReturnValue('/');
     render(<BottomNavigation />);
 
-    const translateLink = screen.getByRole('link', { name: /traduire/i });
-    expect(translateLink).toHaveClass('text-primary');
+    const translateLink = screen.getByRole('menuitem', { name: /traduire/i });
+    expect(translateLink).toHaveAttribute('aria-current', 'page');
   });
 
   it('renders navigation element', () => {

@@ -11,15 +11,22 @@ jest.mock('@/lib/supabase/client', () => ({
 
 // Mock translation cache
 jest.mock('@/services/translationCache', () => ({
-  getCachedTranslation: jest.fn().mockResolvedValue({ success: false }),
-  saveToCache: jest.fn().mockResolvedValue({ success: true }),
+  getCachedTranslationWithOffline: jest.fn().mockResolvedValue({ success: false }),
+  saveToCacheWithOffline: jest.fn().mockResolvedValue({ success: true }),
+}));
+
+// Mock rate limit
+jest.mock('@/lib/rateLimit', () => ({
+  checkRateLimit: jest.fn().mockReturnValue({ allowed: true }),
+  recordRequest: jest.fn(),
+  RATE_LIMIT_CONFIGS: { translation: { key: 'translation' }, global: { key: 'global' } },
 }));
 
 import { createClient } from '@/lib/supabase/client';
-import { getCachedTranslation, saveToCache } from '@/services/translationCache';
+import { getCachedTranslationWithOffline, saveToCacheWithOffline } from '@/services/translationCache';
 
 const mockSupabase = createClient as jest.MockedFunction<typeof createClient>;
-const mockGetCached = getCachedTranslation as jest.MockedFunction<typeof getCachedTranslation>;
+const mockGetCached = getCachedTranslationWithOffline as jest.MockedFunction<typeof getCachedTranslationWithOffline>;
 
 describe('translateText', () => {
   beforeEach(() => {
@@ -87,7 +94,7 @@ describe('translateText', () => {
       targetLang: 'fr',
     });
 
-    expect(saveToCache).toHaveBeenCalledWith('Hello', 'Bonjour', 'en', 'fr');
+    expect(saveToCacheWithOffline).toHaveBeenCalledWith('Hello', 'Bonjour', 'en', 'fr');
   });
 
   it('skips cache when skipCache is true', async () => {
@@ -117,7 +124,7 @@ describe('translateText', () => {
   });
 
   it('returns error on API failure', async () => {
-    mockGetCached.mockResolvedValueOnce({ success: false });
+    mockGetCached.mockResolvedValue({ success: false });
 
     const mockInvoke = jest.fn().mockResolvedValue({
       data: null,
@@ -132,6 +139,7 @@ describe('translateText', () => {
       text: 'Hello',
       sourceLang: 'en',
       targetLang: 'fr',
+      skipCache: true,
     });
 
     expect(result.success).toBe(false);
