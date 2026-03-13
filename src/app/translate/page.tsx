@@ -7,15 +7,6 @@ import { useTranslationFlow, useRequireAuth } from '@/hooks';
 export default function TranslatePage() {
   const { isLoading } = useRequireAuth();
   const [isRequestingPermission, setIsRequestingPermission] = useState(false);
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-      </div>
-    );
-  }
-
   const {
     audioState,
     duration,
@@ -28,6 +19,14 @@ export default function TranslatePage() {
     hasPermission,
     requestPermission,
   } = useTranslationFlow();
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+      </div>
+    );
+  }
 
   const handleRequestPermission = async () => {
     setIsRequestingPermission(true);

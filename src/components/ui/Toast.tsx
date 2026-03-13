@@ -61,6 +61,11 @@ function ToastItem({ toast, onDismiss }: ToastItemProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [isLeaving, setIsLeaving] = useState(false);
 
+  const handleDismiss = useCallback(() => {
+    setIsLeaving(true);
+    setTimeout(() => onDismiss(toast.id), 200);
+  }, [onDismiss, toast.id]);
+
   useEffect(() => {
     // Animate in
     requestAnimationFrame(() => setIsVisible(true));
@@ -73,12 +78,7 @@ function ToastItem({ toast, onDismiss }: ToastItemProps) {
 
       return () => clearTimeout(timer);
     }
-  }, [toast.duration, toast.type]);
-
-  const handleDismiss = () => {
-    setIsLeaving(true);
-    setTimeout(() => onDismiss(toast.id), 200);
-  };
+  }, [toast.duration, toast.type, handleDismiss]);
 
   const icons = {
     success: <Check className="w-5 h-5" />,
