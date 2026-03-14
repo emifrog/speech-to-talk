@@ -45,6 +45,7 @@ function LoginForm() {
             <h1 className="text-2xl font-bold text-white">
               Speech To Talk
             </h1>
+            <p className="text-white/70 text-xs">Traduction vocale en temps réel</p>
           </div>
         </div>
       </div>

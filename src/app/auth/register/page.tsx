@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui';
@@ -81,13 +82,13 @@ export default function RegisterPage() {
       {/* Header */}
       <div className="header-gradient px-6 pt-12 pb-16">
         <div className="flex items-center gap-3">
-          <Link
-            href="/auth/login"
-            className="w-11 h-11 bg-white/20 rounded-xl flex items-center justify-center hover:bg-white/30 transition-colors"
-            aria-label="Retour"
-          >
-            <ArrowLeft className="w-5 h-5 text-white" />
-          </Link>
+          <Image
+            src="/icons/logo.png"
+            alt="Speech To Talk"
+            width={48}
+            height={48}
+            className="w-12 h-12 rounded-xl shadow-glass"
+          />
           <div>
             <h1 className="text-2xl font-bold text-white">
               Créer un compte

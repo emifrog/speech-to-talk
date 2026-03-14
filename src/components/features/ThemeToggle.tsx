@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 import { useTheme } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
 import { lightHaptic } from '@/lib/haptics';
-import { Sun, Moon, Menu, LogIn, Mail, X } from 'lucide-react';
+import { Sun, Moon, Menu, LogIn, Mail, X, Shield } from 'lucide-react';
 import Link from 'next/link';
 
 // ===========================================
@@ -199,6 +199,28 @@ export function SettingsMenu({ className }: SettingsMenuProps) {
                 </p>
               </div>
             </button>
+
+            {/* Paramètres & Légal */}
+            <Link
+              href="/settings"
+              onClick={handleCloseMenu}
+              className={cn(
+                'flex items-center gap-3 px-3 py-3 rounded-xl',
+                'text-slate-700 dark:text-slate-200',
+                'hover:bg-slate-100 dark:hover:bg-slate-700/50',
+                'transition-all duration-200',
+                'group'
+              )}
+              role="menuitem"
+            >
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-slate-400 to-slate-600 flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
+                <Shield className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <p className="text-sm text-slate-800 dark:text-white font-medium">Paramètres</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">Informations légales et RGPD</p>
+              </div>
+            </Link>
 
             {/* Contact */}
             <Link
