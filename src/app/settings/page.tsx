@@ -98,7 +98,7 @@ export default function SettingsPage() {
           {/* App info */}
           <div className="text-center text-xs text-slate-400 dark:text-slate-500 pt-4">
             <p>Speech To Talk v1.0.0</p>
-            <p>Application de traduction vocale pour les sapeurs-pompiers</p>
+            <p>Application de traduction vocale en temps réel pour les sapeurs-pompiers</p>
           </div>
         </div>
       </div>
