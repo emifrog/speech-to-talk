@@ -10,6 +10,7 @@ import {
 } from '@/lib/validation';
 import { retry, defaultIsRetryable } from '@/lib/retry';
 import { checkRateLimit, recordRequest, RATE_LIMIT_CONFIGS } from '@/lib/rateLimit';
+import { trackSpeechToTextError, addBreadcrumb } from '@/lib/sentry';
 
 // ===========================================
 // Service de reconnaissance vocale
@@ -123,7 +124,7 @@ export async function speechToText(
         initialDelay: 1000,
         isRetryable: defaultIsRetryable,
         onRetry: (attempt, err, delay) => {
-          console.warn(`Speech-to-text retry attempt ${attempt} after ${delay}ms:`, err);
+          addBreadcrumb({ message: `STT retry attempt ${attempt} after ${delay}ms`, category: 'speech-to-text', data: { error: String(err) } });
         },
       }
     );
@@ -157,7 +158,7 @@ export async function speechToText(
       },
     };
   } catch (error) {
-    console.error('Speech-to-text error:', error);
+    trackSpeechToTextError(error instanceof Error ? error : new Error(String(error)), { languageCode: params.languageCode });
     return {
       success: false,
       error: {
@@ -240,7 +241,7 @@ export async function detectSpokenLanguage(
         initialDelay: 1000,
         isRetryable: defaultIsRetryable,
         onRetry: (attempt, err, delay) => {
-          console.warn(`Detect language retry attempt ${attempt} after ${delay}ms:`, err);
+          addBreadcrumb({ message: `Detect language retry attempt ${attempt} after ${delay}ms`, category: 'detect-language', data: { error: String(err) } });
         },
       }
     );
@@ -263,7 +264,7 @@ export async function detectSpokenLanguage(
       },
     };
   } catch (error) {
-    console.error('Language detection error:', error);
+    trackSpeechToTextError(error instanceof Error ? error : new Error(String(error)), { languageCode: 'auto' });
     return {
       success: false,
       error: {

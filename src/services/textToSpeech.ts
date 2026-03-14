@@ -4,6 +4,7 @@ import { base64ToBlob } from '@/lib/utils';
 import { getLanguageByCode } from '@/lib/constants';
 import { retry, defaultIsRetryable } from '@/lib/retry';
 import { checkRateLimit, recordRequest, RATE_LIMIT_CONFIGS } from '@/lib/rateLimit';
+import { trackTextToSpeechError, addBreadcrumb } from '@/lib/sentry';
 
 // ===========================================
 // Service Text-to-Speech
@@ -71,7 +72,7 @@ export async function textToSpeech(
         initialDelay: 1000,
         isRetryable: defaultIsRetryable,
         onRetry: (attempt, err, delay) => {
-          console.warn(`Text-to-speech retry attempt ${attempt} after ${delay}ms:`, err);
+          addBreadcrumb({ message: `TTS retry attempt ${attempt} after ${delay}ms`, category: 'text-to-speech', data: { error: String(err) } });
         },
       }
     );
@@ -87,7 +88,7 @@ export async function textToSpeech(
       },
     };
   } catch (error) {
-    console.error('Text-to-speech error:', error);
+    trackTextToSpeechError(error instanceof Error ? error : new Error(String(error)), { languageCode: params.languageCode, textLength: params.text.length });
     return {
       success: false,
       error: {

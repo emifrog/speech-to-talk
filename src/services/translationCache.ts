@@ -135,7 +135,7 @@ export async function getFromDatabaseCache(
       },
     };
   } catch (error) {
-    console.error('Cache lookup error:', error);
+    // Cache errors are non-critical, silently fail
     return {
       success: false,
       error: {
@@ -190,7 +190,7 @@ export async function saveToCache(
 
     return { success: true };
   } catch (error) {
-    console.error('Cache save error:', error);
+    // Cache save errors are non-critical
     // Ne pas retourner d'erreur - le cache est optionnel
     return { success: true };
   }
@@ -306,12 +306,12 @@ export async function saveToOfflineCache(
       request.onerror = () => reject(new Error('Failed to save to IndexedDB'));
       request.onsuccess = () => {
         // Clean up old entries if cache is too large
-        cleanupOfflineCache().catch(console.warn);
+        cleanupOfflineCache().catch(() => {});
         resolve();
       };
     });
   } catch (error) {
-    console.warn('Failed to save to offline cache:', error);
+    // Offline cache save failure is non-critical
   }
 }
 
@@ -355,7 +355,7 @@ export async function getFromOfflineCache(
       };
     });
   } catch (error) {
-    console.warn('Failed to get from offline cache:', error);
+    // Offline cache read failure is non-critical
     return null;
   }
 }
@@ -404,7 +404,7 @@ async function cleanupOfflineCache(): Promise<void> {
       countRequest.onerror = () => reject(new Error('Failed to count cache entries'));
     });
   } catch (error) {
-    console.warn('Failed to cleanup offline cache:', error);
+    // Offline cache cleanup failure is non-critical
   }
 }
 
@@ -425,7 +425,7 @@ export async function clearOfflineCache(): Promise<void> {
       request.onsuccess = () => resolve();
     });
   } catch (error) {
-    console.warn('Failed to clear offline cache:', error);
+    // Offline cache clear failure is non-critical
   }
 }
 
@@ -504,7 +504,7 @@ export async function saveToCacheWithOffline(
   targetLang: LanguageCode
 ): Promise<APIResponse<void>> {
   // Always save to IndexedDB for offline access
-  saveToOfflineCache(text, translatedText, sourceLang, targetLang).catch(console.warn);
+  saveToOfflineCache(text, translatedText, sourceLang, targetLang).catch(() => {});
 
   // Add to memory cache
   addToMemoryCache(text, translatedText, sourceLang, targetLang);

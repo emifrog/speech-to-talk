@@ -45,8 +45,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     // Call custom error handler if provided
     this.props.onError?.(error, errorInfo);
 
-    // TODO: Send to error monitoring service (Sentry, LogRocket, etc.)
-    // logErrorToService(error, errorInfo);
+    // Error is also captured by Sentry via providers.tsx global error handler
   }
 
   handleRetry = (): void => {

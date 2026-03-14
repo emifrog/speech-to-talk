@@ -219,11 +219,8 @@ export async function retrySupabaseFunction<T>(
       },
       {
         isRetryable: defaultIsRetryable,
-        onRetry: (attempt, error, delay) => {
-          console.warn(
-            `Supabase function retry attempt ${attempt} after ${delay}ms:`,
-            error
-          );
+        onRetry: () => {
+          // Retry handled by individual service callers
         },
         ...options,
       }

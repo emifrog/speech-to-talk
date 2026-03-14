@@ -8,6 +8,7 @@ import {
   UpdatePasswordSchema,
   safeValidateData,
 } from '@/lib/validation';
+import { captureError } from '@/lib/sentry';
 
 /**
  * Transforme un User Supabase en notre type User personnalisé
@@ -62,7 +63,7 @@ export async function signUp(
       },
     };
   } catch (error) {
-    console.error('Sign up error:', error);
+    captureError(error instanceof Error ? error : new Error(String(error)), { tags: { service: 'auth', action: 'signUp' } });
     return {
       success: false,
       error: {
@@ -112,7 +113,7 @@ export async function signIn(
       data: { user: mapSupabaseUser(data.user) },
     };
   } catch (error) {
-    console.error('Sign in error:', error);
+    captureError(error instanceof Error ? error : new Error(String(error)), { tags: { service: 'auth', action: 'signIn' } });
     return {
       success: false,
       error: {
@@ -138,7 +139,7 @@ export async function signOut(): Promise<APIResponse<void>> {
 
     return { success: true };
   } catch (error) {
-    console.error('Sign out error:', error);
+    captureError(error instanceof Error ? error : new Error(String(error)), { tags: { service: 'auth', action: 'signOut' } });
     return {
       success: false,
       error: {
@@ -182,7 +183,7 @@ export async function getCurrentUser(): Promise<APIResponse<{ user: User | null 
       data: { user: mapSupabaseUser(user) },
     };
   } catch (error) {
-    console.error('Get current user error:', error);
+    captureError(error instanceof Error ? error : new Error(String(error)), { tags: { service: 'auth', action: 'getCurrentUser' } });
     return {
       success: false,
       error: {
@@ -222,7 +223,7 @@ export async function resetPassword(email: string): Promise<APIResponse<void>> {
 
     return { success: true };
   } catch (error) {
-    console.error('Reset password error:', error);
+    captureError(error instanceof Error ? error : new Error(String(error)), { tags: { service: 'auth', action: 'resetPassword' } });
     return {
       success: false,
       error: {
@@ -265,7 +266,7 @@ export async function updatePassword(newPassword: string): Promise<APIResponse<v
 
     return { success: true };
   } catch (error) {
-    console.error('Update password error:', error);
+    captureError(error instanceof Error ? error : new Error(String(error)), { tags: { service: 'auth', action: 'updatePassword' } });
     return {
       success: false,
       error: {

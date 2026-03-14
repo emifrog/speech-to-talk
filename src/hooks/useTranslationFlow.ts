@@ -7,6 +7,7 @@ import { speechToText } from '@/services/speechToText';
 import { translateText, createTranslationResult } from '@/services/translation';
 import { textToSpeech, playAudioFromBase64 } from '@/services/textToSpeech';
 import type { TranslationResult, AudioState } from '@/types';
+import { captureError } from '@/lib/sentry';
 
 // ===========================================
 // Hook principal pour le flux de traduction
@@ -136,7 +137,7 @@ export function useTranslationFlow(): UseTranslationFlowReturn {
 
       setAudioState('idle');
     } catch (err) {
-      console.error('Translation flow error:', err);
+      captureError(err instanceof Error ? err : new Error(String(err)), { tags: { hook: 'useTranslationFlow', action: 'stopAndTranslate' } });
       setError(err instanceof Error ? err.message : 'Erreur de traduction');
       setAudioState('error');
     }
@@ -180,7 +181,7 @@ export function useTranslationFlow(): UseTranslationFlowReturn {
       await playAudioFromBase64(audioContent);
       setAudioState('idle');
     } catch (err) {
-      console.error('Play audio error:', err);
+      captureError(err instanceof Error ? err : new Error(String(err)), { tags: { hook: 'useTranslationFlow', action: 'playAudio' } });
       setError('Erreur de lecture audio');
       setAudioState('idle');
     }

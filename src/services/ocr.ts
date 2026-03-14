@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/client';
 import type { LanguageCode, OCRResult, APIResponse } from '@/types';
 import { retry, defaultIsRetryable } from '@/lib/retry';
 import { checkRateLimit, recordRequest, RATE_LIMIT_CONFIGS } from '@/lib/rateLimit';
+import { trackOCRError, addBreadcrumb } from '@/lib/sentry';
 
 // ===========================================
 // Service OCR (Google Cloud Vision)
@@ -60,7 +61,7 @@ export async function extractTextFromImage(
         initialDelay: 1000,
         isRetryable: defaultIsRetryable,
         onRetry: (attempt, err, delay) => {
-          console.warn(`OCR retry attempt ${attempt} after ${delay}ms:`, err);
+          addBreadcrumb({ message: `OCR retry attempt ${attempt} after ${delay}ms`, category: 'ocr', data: { error: String(err) } });
         },
       }
     );
@@ -95,7 +96,7 @@ export async function extractTextFromImage(
       },
     };
   } catch (error) {
-    console.error('OCR error:', error);
+    trackOCRError(error instanceof Error ? error : new Error(String(error)), {});
     return {
       success: false,
       error: {

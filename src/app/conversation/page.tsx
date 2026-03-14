@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useEffect } from 'react';
+import Image from 'next/image';
 import { BottomNavigation, SettingsMenu } from '@/components/features';
 import { useConversation, useLanguages } from '@/lib/store';
 import { useConversationFlow, useRequireAuth } from '@/hooks';
@@ -63,9 +64,11 @@ export default function ConversationPage() {
         <div className="header-gradient-content">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <img
+              <Image
                 src="/icons/logo.png"
                 alt="Speech To Talk"
+                width={40}
+                height={40}
                 className="w-10 h-10 rounded-xl"
               />
               <div>

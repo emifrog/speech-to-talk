@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useCallback } from 'react';
+import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { BottomNavigation, SettingsMenu } from '@/components/features';
 import { useToast } from '@/components/ui';
@@ -136,7 +137,6 @@ export default function ScanPage() {
 
       setScanState('done');
     } catch (error) {
-      console.error('Scan error:', error);
       const msg = error instanceof Error ? error.message : 'Une erreur est survenue';
       setErrorMessage(msg);
       setScanState('error');
@@ -152,7 +152,6 @@ export default function ScanPage() {
       const { playAudioFromBase64 } = await import('@/services/textToSpeech');
       await playAudioFromBase64(audioContent);
     } catch (error) {
-      console.error('Audio playback error:', error);
       toast.error('Erreur de lecture audio');
     } finally {
       setIsPlaying(false);
@@ -199,9 +198,11 @@ export default function ScanPage() {
         <div className="header-gradient-content">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <img
+              <Image
                 src="/icons/logo.png"
                 alt="Speech To Talk"
+                width={40}
+                height={40}
                 className="w-10 h-10 rounded-xl"
               />
               <div>
@@ -327,6 +328,7 @@ export default function ScanPage() {
               {/* Image preview */}
               <div className="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
                 <div className="relative bg-slate-100 dark:bg-slate-900 h-40 flex items-center justify-center">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={scanResult.imagePreview}
                     alt="Document scanné"

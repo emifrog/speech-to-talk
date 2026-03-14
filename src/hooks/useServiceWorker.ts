@@ -57,13 +57,13 @@ export function useServiceWorker(): UseServiceWorkerReturn {
     setState((prev) => ({ ...prev, isSupported }));
 
     if (!isSupported) {
-      console.warn('[useServiceWorker] Service workers not supported');
+      // Service workers not supported in this browser
       return;
     }
 
     // Don't register in development for easier debugging
     if (process.env.NODE_ENV === 'development') {
-      console.log('[useServiceWorker] Skipping registration in development');
+      // Skip SW registration in development
       return;
     }
 
@@ -73,7 +73,7 @@ export function useServiceWorker(): UseServiceWorkerReturn {
           scope: '/',
         });
 
-        console.log('[useServiceWorker] Service worker registered:', registration.scope);
+        // Service worker registered successfully
 
         setState((prev) => ({
           ...prev,
@@ -88,7 +88,7 @@ export function useServiceWorker(): UseServiceWorkerReturn {
           if (newWorker) {
             newWorker.addEventListener('statechange', () => {
               if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                console.log('[useServiceWorker] New version available');
+                // New version available
                 setState((prev) => ({ ...prev, updateAvailable: true }));
               }
             });
@@ -97,11 +97,11 @@ export function useServiceWorker(): UseServiceWorkerReturn {
 
         // Listen for controlling service worker changes
         navigator.serviceWorker.addEventListener('controllerchange', () => {
-          console.log('[useServiceWorker] Controller changed, reloading...');
+          // Controller changed, reloading
           window.location.reload();
         });
       } catch (error) {
-        console.error('[useServiceWorker] Registration failed:', error);
+        // SW registration failed — non-critical
         setState((prev) => ({
           ...prev,
           error: error instanceof Error ? error : new Error('Registration failed'),
@@ -123,7 +123,7 @@ export function useServiceWorker(): UseServiceWorkerReturn {
         state.registration.waiting.postMessage({ type: 'SKIP_WAITING' });
       }
     } catch (error) {
-      console.error('[useServiceWorker] Update failed:', error);
+      // SW update failed — non-critical
     }
   }, [state.registration]);
 
@@ -144,7 +144,7 @@ export function useServiceWorker(): UseServiceWorkerReturn {
 
       return success;
     } catch (error) {
-      console.error('[useServiceWorker] Unregister failed:', error);
+      // SW unregister failed — non-critical
       return false;
     }
   }, [state.registration]);

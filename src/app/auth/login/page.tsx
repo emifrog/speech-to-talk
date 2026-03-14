@@ -2,6 +2,7 @@
 
 import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui';
@@ -33,9 +34,11 @@ function LoginForm() {
       {/* Header */}
       <div className="header-gradient px-6 pt-12 pb-16">
         <div className="flex items-center gap-3">
-          <img
+          <Image
             src="/icons/logo.png"
             alt="Speech To Talk"
+            width={48}
+            height={48}
             className="w-12 h-12 rounded-xl shadow-glass"
           />
           <div>

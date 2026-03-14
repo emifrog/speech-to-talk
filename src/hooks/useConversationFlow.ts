@@ -8,6 +8,7 @@ import { translateText, createTranslationResult } from '@/services/translation';
 import { textToSpeech, playAudioFromBase64 } from '@/services/textToSpeech';
 import type { ConversationParticipant, ConversationMessage, AudioState, LanguageCode } from '@/types';
 import { generateId } from '@/lib/utils';
+import { captureError } from '@/lib/sentry';
 
 // ===========================================
 // Hook pour le flux de conversation bilingue
@@ -152,7 +153,7 @@ export function useConversationFlow(): UseConversationFlowReturn {
 
       setAudioState('idle');
     } catch (err) {
-      console.error('Conversation flow error:', err);
+      captureError(err instanceof Error ? err : new Error(String(err)), { tags: { hook: 'useConversationFlow', action: 'stopAndTranslate' } });
       setError(err instanceof Error ? err.message : 'Erreur de traduction');
       setAudioState('error');
     }
@@ -193,7 +194,7 @@ export function useConversationFlow(): UseConversationFlowReturn {
       await playAudioFromBase64(message.audioUrl);
       setAudioState('idle');
     } catch (err) {
-      console.error('Play audio error:', err);
+      captureError(err instanceof Error ? err : new Error(String(err)), { tags: { hook: 'useConversationFlow', action: 'playAudio' } });
       setError('Erreur de lecture audio');
       setAudioState('idle');
     }

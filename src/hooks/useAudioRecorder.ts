@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import type { AudioRecordingResult } from '@/types';
 import { AUDIO_CONFIG } from '@/lib/constants';
+import { captureError } from '@/lib/sentry';
 
 // ===========================================
 // Hook pour l'enregistrement audio
@@ -87,7 +88,7 @@ export function useAudioRecorder(
       setError(null);
       return true;
     } catch (err) {
-      console.error('Permission error:', err);
+      captureError(err instanceof Error ? err : new Error(String(err)), { tags: { hook: 'useAudioRecorder', action: 'permission' } });
 
       // Messages d'erreur plus spécifiques
       if (err instanceof Error) {
@@ -171,7 +172,7 @@ export function useAudioRecorder(
         }
       }, 100);
     } catch (err) {
-      console.error('Start recording error:', err);
+      captureError(err instanceof Error ? err : new Error(String(err)), { tags: { hook: 'useAudioRecorder', action: 'startRecording' } });
       setError('Impossible d\'accéder au microphone');
       setHasPermission(false);
     }

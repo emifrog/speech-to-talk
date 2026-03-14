@@ -9,6 +9,7 @@ import {
 import { getCachedTranslationWithOffline, saveToCacheWithOffline } from './translationCache';
 import { retry, defaultIsRetryable } from '@/lib/retry';
 import { checkRateLimit, recordRequest, RATE_LIMIT_CONFIGS } from '@/lib/rateLimit';
+import { captureError, trackTranslationError, addBreadcrumb } from '@/lib/sentry';
 
 // ===========================================
 // Service de traduction
@@ -121,7 +122,7 @@ export async function translateText(
         initialDelay: 1000,
         isRetryable: defaultIsRetryable,
         onRetry: (attempt, err, delay) => {
-          console.warn(`Translation retry attempt ${attempt} after ${delay}ms:`, err);
+          addBreadcrumb({ message: `Translation retry attempt ${attempt} after ${delay}ms`, category: 'translation', data: { error: String(err) } });
         },
       }
     );
@@ -142,7 +143,7 @@ export async function translateText(
       responseValidation.data.translatedText,
       params.sourceLang,
       params.targetLang
-    ).catch(err => console.warn('Cache save failed:', err));
+    ).catch(() => {});
 
     return {
       success: true,
@@ -153,7 +154,7 @@ export async function translateText(
       },
     };
   } catch (error) {
-    console.error('Translation error:', error);
+    trackTranslationError(error instanceof Error ? error : new Error(String(error)), { sourceLang: params.sourceLang, targetLang: params.targetLang, textLength: params.text.length });
     return {
       success: false,
       error: {
@@ -216,7 +217,7 @@ export async function saveTranslationToHistory(
       data: { id: data.id },
     };
   } catch (error) {
-    console.error('Save translation error:', error);
+    captureError(error instanceof Error ? error : new Error(String(error)), { tags: { service: 'translation', action: 'save' } });
     return {
       success: false,
       error: {
@@ -263,7 +264,7 @@ export async function getTranslationHistory(
       data: results,
     };
   } catch (error) {
-    console.error('Get history error:', error);
+    captureError(error instanceof Error ? error : new Error(String(error)), { tags: { service: 'translation', action: 'getHistory' } });
     return {
       success: false,
       error: {
@@ -295,7 +296,7 @@ export async function toggleFavorite(
 
     return { success: true };
   } catch (error) {
-    console.error('Toggle favorite error:', error);
+    captureError(error instanceof Error ? error : new Error(String(error)), { tags: { service: 'translation', action: 'toggleFavorite' } });
     return {
       success: false,
       error: {

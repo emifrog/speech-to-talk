@@ -148,7 +148,7 @@ export const storage = {
     try {
       localStorage.setItem(key, JSON.stringify(value));
     } catch {
-      console.error('Error saving to localStorage');
+      // localStorage save failed silently
     }
   },
   remove: (key: string): void => {
@@ -156,7 +156,7 @@ export const storage = {
     try {
       localStorage.removeItem(key);
     } catch {
-      console.error('Error removing from localStorage');
+      // localStorage remove failed silently
     }
   },
 };

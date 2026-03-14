@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { BottomNavigation, LanguageSelector, MicrophoneButton, TranslationResult, SettingsMenu } from '@/components/features';
 import { SkeletonLanguageSelector, SkeletonMicrophoneButton } from '@/components/ui';
 import { useTranslationFlow, useRequireAuth } from '@/hooks';
@@ -55,9 +56,11 @@ export default function TranslatePage() {
         <div className="header-gradient-content">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <img
+              <Image
                 src="/icons/logo.png"
                 alt="Speech To Talk"
+                width={40}
+                height={40}
                 className="w-10 h-10 rounded-xl"
               />
               <div>

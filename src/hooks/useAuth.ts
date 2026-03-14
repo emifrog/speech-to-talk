@@ -34,7 +34,7 @@ export function useAuth(): UseAuthReturn {
           setUser(result.data.user);
         }
       } catch (err) {
-        console.error('Check user error:', err);
+        // Auth check failure on mount is expected when not logged in
       } finally {
         setIsLoading(false);
       }
